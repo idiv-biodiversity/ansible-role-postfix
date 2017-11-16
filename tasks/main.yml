@@ -1,0 +1,110 @@
+---
+
+- name: install postfix
+  yum:
+    pkg: postfix
+
+- name: remove sendmail
+  yum:
+    name: sendmail
+    state: absent
+
+- name: configure /etc/aliases
+  template:
+    src: '{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}-aliases.j2'
+    dest: /etc/aliases
+    owner: root
+    group: root
+    mode: '0644'
+  register: postfix_aliases_configured
+  tags:
+    - postfix-aliases
+
+- name: regenerate /etc/aliases.db
+  command: newaliases
+  when: postfix_aliases_configured.changed
+  tags:
+    - postfix-aliases
+
+- name: configure postfix/main.cf
+  template:
+    src: '{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}-main.cf.j2'
+    dest: /etc/postfix/main.cf
+    owner: root
+    group: root
+    mode: '0644'
+  register: postfix_main_configured
+  tags:
+    - postfix-main
+
+- name: reload postfix
+  service:
+    name: postfix
+    state: reloaded
+  when: postfix_main_configured.changed
+  tags:
+    - postfix-main
+
+- name: configure postfix generic mappings
+  template:
+    src: 'generic.j2'
+    dest: /etc/postfix/generic
+    owner: root
+    group: root
+    mode: '0644'
+  when: postfix_generic_entries is defined
+  register: postfix_generic_configured
+  tags:
+    - postfix-generic
+
+- name: regenerate postfix generic mappings
+  command: 'postmap /etc/postfix/generic'
+  when: postfix_generic_configured.changed
+  tags:
+    - postfix-generic
+
+- name: configure postfix relay mappings
+  template:
+    src: 'relay.j2'
+    dest: /etc/postfix/relay
+    owner: root
+    group: root
+    mode: '0644'
+  when: postfix_relay_entries is defined
+  register: postfix_relay_configured
+  tags:
+    - postfix-relay
+
+- name: regenerate postfix relay mappings
+  command: 'postmap /etc/postfix/relay'
+  when: postfix_relay_configured.changed
+  tags:
+    - postfix-relay
+
+- name: configure postfix transport mappings
+  template:
+    src: 'transport.j2'
+    dest: /etc/postfix/transport
+    owner: root
+    group: root
+    mode: '0644'
+  when: postfix_transport_entries is defined
+  register: postfix_transport_configured
+  tags:
+    - postfix-transport
+
+- name: regenerate postfix transport mappings
+  command: 'postmap /etc/postfix/transport'
+  when: postfix_transport_configured.changed
+  tags:
+    - postfix-transport
+
+- name: enable postfix service and assure it is started
+  service:
+    name: postfix
+    enabled: yes
+    state: started
+  tags:
+    - service
+
+...
