@@ -20,6 +20,7 @@ Table of Contents
 - [Dependencies](#dependencies)
 - [Example Playbook](#example-playbook)
   * [Top-Level Playbook](#top-level-playbook)
+  * [Role Dependency](#role-dependency)
 - [License](#license)
 - [Author Information](#author-information)
 
@@ -33,6 +34,8 @@ Requirements
 Role Variables
 --------------
 
+### Basic Variables
+
 Variables with defaults:
 
 ```yml
@@ -41,10 +44,6 @@ postfix_inet_interfaces:
 
 postfix_debug_peer_level: '2'
 ```
-
-All other variables are unset by default.
-
-### Basic Variables
 
 These are empty by default, but can be set to simple string values:
 
@@ -67,7 +66,7 @@ postfix_masquerade_classes:
 
 postfix_masquerade_domains:
   - 'foo.example.org'
-  - 'bar.example.org
+  - 'bar.example.org'
 
 postfix_masquerade_exceptions:
   - 'root'
@@ -164,7 +163,6 @@ Add to `requirements.yml`:
 ---
 
 - src: idiv-biodiversity.postfix
-  version: v1.0.0
 
 ...
 ```
@@ -186,9 +184,29 @@ Write a top-level playbook:
   hosts: head
 
   roles:
-    - role: postfix
+    - role: idiv-biodiversity.postfix
       tags:
+        - mail
+        - mta
         - postfix
+
+...
+```
+
+### Role Dependency
+
+Define the role dependency in `meta/main.yml`:
+
+```yml
+---
+
+dependencies:
+
+  - role: idiv-biodiversity.postfix
+    tags:
+      - mail
+      - mta
+      - postfix
 
 ...
 ```
@@ -201,12 +219,11 @@ MIT
 Author Information
 ------------------
 
-This role was created in 2017 by [Christian Krause][author] aka [wookietreiber at GitHub][wookietreiber], HPC cluster systems administrator at the [German Centre for Integrative Biodiversity Research (iDiv)][idiv], based on a draft by Ben Langenberg aka [bencarsten at GitHub][].
+This role was created in 2017 by [Christian Krause][author] aka [wookietreiber at GitHub][wookietreiber], HPC cluster systems administrator at the [German Centre for Integrative Biodiversity Research (iDiv)][idiv], based on a draft by Ben Langenberg aka [bencarsten at GitHub][bencarsten].
 
 
 [author]: https://www.idiv.de/groups_and_people/employees/details/eshow/krause-christian.html
 [idiv]: https://www.idiv.de/
 [bencarsten]: https://github.com/bencarsten
 [wookietreiber]: https://github.com/wookietreiber
-[blastdl]: https://github.com/idiv-biodiversity/blastdl
 [postfix]: http://www.postfix.org/
