@@ -94,6 +94,10 @@ support:	postmaster
 decode:		root
 
 # Person who should get root's mail
+{% if postfix_aliases is defined %}
 {%- for alias in postfix_aliases %}
 {{ alias.user }}: {{ alias.alias }}
 {%- endfor %}
+{% else %}
+#root:		marc
+{% endif %}
