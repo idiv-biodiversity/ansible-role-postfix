@@ -114,21 +114,29 @@ That's where I'm mostly fuzzy, but that's how it works for us:
 
 ```yml
 postfix_smtp:
-  tls_CApath: '/etc/pki/tls/certs'
-  tls_security_level: 'may'
-  tls_cert_file: '/etc/pki/cert.pem'
-  tls_key_file: '/etc/pki/key.pem'
-  tls_note_starttls_offer: 'yes'
+  sasl:
+    security_options:
+      - noplaintext
+      - noanonymous
+    password_maps:
+      - 'hash:/etc/postfix/sasl_password'
+  tls:
+    - CApath: '/etc/pki/tls/certs'
+    - security_level: 'may'
+    - cert_file: '/etc/pki/cert.pem'
+    - key_file: '/etc/pki/key.pem'
+    - note_starttls_offer: 'yes'
 
 postfix_smtpd:
-  tls_CApath: '/etc/pki/tls/certs'
-  tls_security_level: 'may'
-  tls_cert_file: '/etc/pki/cert.pem'
-  tls_key_file: '/etc/pki/key.pem'
-  tls_auth_only: 'no'
-  tls_loglevel: '1'
-  tls_received_header: 'yes'
-  tls_session_cache_timeout: '3600s'
+  tls:
+    - CApath: '/etc/pki/tls/certs'
+    - security_level: 'may'
+    - cert_file: '/etc/pki/cert.pem'
+    - key_file: '/etc/pki/key.pem'
+    - auth_only: 'no'
+    - loglevel: '1'
+    - received_header: 'yes'
+    - session_cache_timeout: '3600s'
 
 postfix_tls_random_source: 'dev:/dev/urandom'
 ```
