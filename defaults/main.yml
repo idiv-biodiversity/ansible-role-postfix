@@ -3,6 +3,6 @@
 postfix_debug_peer_level: '2'
 
 postfix_inet_interfaces:
-  - 'localhost'
+  - localhost
 
 ...
