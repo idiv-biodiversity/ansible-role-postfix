@@ -49,7 +49,6 @@ These are empty by default, but can be set to simple string values:
 postfix_hostname: 'foo'
 postfix_domain: 'bar'
 postfix_origin: 'baz'
-postfix_relayhost: 'bippy'
 ```
 
 ### Aliases Database
@@ -62,19 +61,26 @@ postfix_aliases:
     alias: 'admin@example.org'
 ```
 
-### Generic Database
+### SMTP Generic Table
 
-Configure `/etc/postfix/generic`, e.g.:
+Defines address mappings when mail is delivered via SMTP. This is useful to
+transform **local** mail addresses into **valid** mail addresses. The following
+example rewrites the sender **icinga@internal** to **support@example.org** and
+everything else **@internal** to **no-reply@example.org**:
 
 ```yml
-postfix_smtp_generic_maps: 'hash:/etc/postfix/generic'
-
-postfix_generic_entries:
-  - src: 'root'
-    dst: 'admin@example.org'
-  - src: 'icinga2@host.foo.example.org'
-    dst: 'admin@example.org'
+postfix_smtp_generic:
+  type: hash
+  dest: /etc/postfix/smtp_generic
+  content: |
+    icinga@internal support@example.org
+    @internal       no-reply@example.org
 ```
+
+**Note:** Affects both message header addresses, i.e. the **From:** field, and
+envelope addresses which are used by SMTP.
+
+**Note:** Consult `man 5 generic` for more information.
 
 ### SMTP
 

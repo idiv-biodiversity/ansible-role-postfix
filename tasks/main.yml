@@ -55,23 +55,29 @@
   tags:
     - postfix-main
 
-- name: configure postfix generic mappings
-  template:
-    src: 'generic.j2'
-    dest: /etc/postfix/generic
+- name: configure postfix smtp generic mappings
+  copy:
+    content: '{{ postfix_smtp_generic.content }}'
+    dest: '{{ postfix_smtp_generic.dest }}'
     owner: root
     group: root
-    mode: '0644'
-  when: postfix_generic_entries is defined
-  register: postfix_generic_configured
-  tags:
-    - postfix-generic
+    mode: 0644
+  when: >-
+    postfix_smtp_generic is defined and
+    postfix_smtp_generic.content is defined
+  register: postfix_smtp_generic_configuration
 
-- name: regenerate postfix generic mappings
-  command: 'postmap /etc/postfix/generic'
-  when: postfix_generic_configured.changed
-  tags:
-    - postfix-generic
+- name: regenerate postfix smtp generic mappings
+  command: 'postmap {{ postfix_smtp_generic.dest }}'
+  when: >-
+    postfix_smtp_generic_configuration is defined and
+    postfix_smtp_generic_configuration.changed and
+    (postfix_smtp_generic.type == "btree" or
+    postfix_smtp_generic.type == "cdb" or
+    postfix_smtp_generic.type == "dbm" or
+    postfix_smtp_generic.type == "hash" or
+    postfix_smtp_generic.type == "lmdb" or
+    postfix_smtp_generic.type == "sdbm")
 
 - name: configure postfix transport mappings
   template:

@@ -367,6 +367,9 @@ relayhost = {{ postfix_relayhost }}
 # The ADDRESS_REWRITING_README document gives information about
 # address masquerading or other forms of address rewriting including
 # username->Firstname.Lastname mapping.
+{% if postfix_smtp_generic is defined %}
+smtp_generic_maps = {{ postfix_smtp_generic.type }}:{{ postfix_smtp_generic.dest }}
+{% endif %}
 
 # ADDRESS REDIRECTION (VIRTUAL DOMAIN)
 #
@@ -695,9 +698,6 @@ sample_directory = /usr/share/doc/postfix-{{ postfix_installed_version }}/sample
 # readme_directory: The location of the Postfix README files.
 #
 readme_directory = /usr/share/doc/postfix-{{ postfix_installed_version }}/README_FILES
-{% if postfix_smtp_generic_maps is defined %}
-smtp_generic_maps = {{ postfix_smtp_generic_maps }}
-{% endif %}
 {% if postfix_smtp is defined %}
 {% if postfix_smtp.tls_note_starttls_offer is defined %}
 smtp_tls_note_starttls_offer = {{ postfix_smtp.tls_note_starttls_offer }}
