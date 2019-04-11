@@ -41,8 +41,6 @@ Variables with defaults:
 ```yml
 postfix_inet_interfaces:
   - localhost
-
-postfix_debug_peer_level: '2'
 ```
 
 These are empty by default, but can be set to simple string values:
