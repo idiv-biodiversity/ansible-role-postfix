@@ -51,7 +51,7 @@ postfix_domain: 'bar'
 postfix_origin: 'baz'
 ```
 
-### Aliases Database
+### Aliases
 
 The variable `postfix_aliases` configures `/etc/aliases`, e.g.:
 

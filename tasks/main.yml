@@ -26,15 +26,11 @@
     owner: root
     group: root
     mode: '0644'
-  register: postfix_aliases_configured
-  tags:
-    - postfix-aliases
+  register: postfix_aliases_configuration
 
 - name: regenerate /etc/aliases.db
   command: newaliases
-  when: postfix_aliases_configured.changed
-  tags:
-    - postfix-aliases
+  when: postfix_aliases_configuration.changed
 
 - name: configure postfix smtp generic mappings
   copy:
