@@ -11,12 +11,12 @@ Table of Contents
 - [Requirements](#requirements)
 - [Role Variables](#role-variables)
   * [Basic Variables](#basic-variables)
-  * [Masquerading](#masquerading)
-  * [Aliases Database](#aliases-database)
-  * [Generic Database](#generic-database)
-  * [Relay Database](#relay-database)
+  * [Aliases](#aliases)
+  * [Relay and Transport](#relay-and-transport)
+  * [SMTP Generic Table](#smtp-generic-table)
+  * [Canonical Sender](#canonical-sender)
+  * [Header Checks](#header-checks)
   * [SMTP](#smtp)
-  * [Transport Database](#transport-database)
 - [Dependencies](#dependencies)
 - [Example Playbook](#example-playbook)
   * [Top-Level Playbook](#top-level-playbook)
@@ -34,6 +34,12 @@ Requirements
 Role Variables
 --------------
 
+This role does in no way capture the entirety of possible postfix options. If
+you need something specific, feel free to contribute!
+
+The `content` field is optional for of all dictionary variables potentially
+referring to *configuration tables*, e.g. `postfix_transport`.
+
 ### Basic Variables
 
 Variables with defaults:
@@ -43,13 +49,16 @@ postfix_inet_interfaces:
   - localhost
 ```
 
-These are empty by default, but can be set to simple string values:
+These variables are empty by default, but postfix has its own defaults for
+them. Check `postconf -d | grep ^my` for their defaults.
 
 ```yml
-postfix_hostname: 'foo'
-postfix_domain: 'bar'
-postfix_origin: 'baz'
+postfix_hostname: host.example.org
+postfix_domain: example.org
+postfix_origin: example.org
 ```
+
+**Note:** Consult `man 5 postconf` for more information.
 
 ### Aliases
 
@@ -136,8 +145,6 @@ postfix_header_checks:
 
 ### SMTP
 
-That's where I'm mostly fuzzy, but that's how it works for us:
-
 ```yml
 postfix_smtp:
   tls_CApath: '/etc/pki/tls/certs'
@@ -159,7 +166,7 @@ postfix_smtpd:
 postfix_tls_random_source: 'dev:/dev/urandom'
 ```
 
-At the moment, PEM files need to be copied manually.
+**Note:** At the moment, PEM files need to be copied manually.
 
 Dependencies
 ------------
