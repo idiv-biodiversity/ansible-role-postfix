@@ -330,6 +330,9 @@ unknown_local_recipient_reject_code = 550
 {% if postfix_relayhost is defined %}
 relayhost = {{ postfix_relayhost }}
 {% endif %}
+{% if postfix_smtp_fallback_relay is defined and postfix_smtp_fallback_relay | length > 0 %}
+smtp_fallback_relay = {{ postfix_smtp_fallback_relay }}
+{% endif %}
 
 # REJECTING UNKNOWN RELAY USERS
 #
@@ -383,8 +386,8 @@ smtp_generic_maps = {{ postfix_smtp_generic.type }}:{{ postfix_smtp_generic.dest
 # TRANSPORT MAP
 #
 # See the discussion in the ADDRESS_REWRITING_README document.
-{% if postfix_transport_maps is defined %}
-transport_maps = {{ postfix_transport_maps }}
+{% if postfix_transport is defined %}
+transport_maps = {{ postfix_transport.type }}:{{ postfix_transport.dest }}
 {% endif %}
 
 # ALIAS DATABASE

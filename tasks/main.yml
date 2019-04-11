@@ -57,22 +57,28 @@
     postfix_smtp_generic.type == "sdbm")
 
 - name: configure postfix transport mappings
-  template:
-    src: 'transport.j2'
-    dest: /etc/postfix/transport
+  copy:
+    content: '{{ postfix_transport.content }}'
+    dest: '{{ postfix_transport.dest }}'
     owner: root
     group: root
-    mode: '0644'
-  when: postfix_transport_entries is defined
-  register: postfix_transport_configured
-  tags:
-    - postfix-transport
+    mode: 0644
+  when: >-
+    postfix_transport is defined and
+    postfix_transport.content is defined
+  register: postfix_transport_configuration
 
 - name: regenerate postfix transport mappings
-  command: 'postmap /etc/postfix/transport'
-  when: postfix_transport_configured.changed
-  tags:
-    - postfix-transport
+  command: 'postmap {{ postfix_transport.dest }}'
+  when: >-
+    postfix_transport_configuration is defined and
+    postfix_transport_configuration.changed and
+    (postfix_transport.type == "btree" or
+    postfix_transport.type == "cdb" or
+    postfix_transport.type == "dbm" or
+    postfix_transport.type == "hash" or
+    postfix_transport.type == "lmdb" or
+    postfix_transport.type == "sdbm")
 
 - name: configure main.cf
   template:

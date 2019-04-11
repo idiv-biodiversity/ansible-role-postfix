@@ -61,6 +61,30 @@ postfix_aliases:
     alias: 'admin@example.org'
 ```
 
+### Relay and Transport
+
+Delivery targets, i.e. relays:
+
+```yml
+postfix_relayhost: relay1.domain.org
+postfix_smtp_fallback_relay: relay2.domain.org
+```
+
+Additionally, there is more fine-grained control with the transport table:
+
+```yml
+postfix_transport:
+  type: hash
+  dest: /etc/postfix/transport
+  content: |
+    foo.org         smtp:[imap1.example.org]
+    .foo.org        smtp:[imap1.example.org]
+    bar.org         smtp:[imap2.example.org]
+    .bar.org        smtp:[imap2.example.org]
+```
+
+**Note:** Consult `man 5 transport` for more information.
+
 ### SMTP Generic Table
 
 Defines address mappings when mail is delivered via SMTP. This is useful to
@@ -108,20 +132,6 @@ postfix_tls_random_source: 'dev:/dev/urandom'
 ```
 
 At the moment, PEM files need to be copied manually.
-
-### Transport Database
-
-Configure `/etc/postfix/transport`, e.g.:
-
-```yml
-postfix_transport_maps: 'hash:/etc/postfix/transport'
-
-postfix_transport_entries:
-  - src: 'foo.org'
-    dst: 'smtp:[mail.example.org]'
-  - src: 'bar.org'
-    dst: 'smtp:[mail.example.org]'
-```
 
 Dependencies
 ------------
