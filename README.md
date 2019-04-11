@@ -94,18 +94,6 @@ postfix_generic_entries:
     dst: 'admin@example.org'
 ```
 
-### Relay Database
-
-Configure `/etc/postfix/relay`, e.g.:
-
-```yml
-postfix_relay_entries:
-  - src: 'foo.org'
-    dst: '[mail.example.org]'
-  - src: 'bar.org'
-    dst: '[mail.example.org]'
-```
-
 ### SMTP
 
 That's where I'm mostly fuzzy, but that's how it works for us:

@@ -63,24 +63,6 @@
   tags:
     - postfix-generic
 
-- name: configure postfix relay mappings
-  template:
-    src: 'relay.j2'
-    dest: /etc/postfix/relay
-    owner: root
-    group: root
-    mode: '0644'
-  when: postfix_relay_entries is defined
-  register: postfix_relay_configured
-  tags:
-    - postfix-relay
-
-- name: regenerate postfix relay mappings
-  command: 'postmap /etc/postfix/relay'
-  when: postfix_relay_configured.changed
-  tags:
-    - postfix-relay
-
 - name: configure postfix transport mappings
   template:
     src: 'transport.j2'
