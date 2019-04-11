@@ -106,6 +106,20 @@ envelope addresses which are used by SMTP.
 
 **Note:** Consult `man 5 generic` for more information.
 
+### Header Checks
+
+This lets you rewrite message headers:
+
+```yml
+postfix_header_checks:
+  type: regexp
+  dest: /etc/postfix/header_checks
+  content: |
+    /^From: root@[^ ]+\.example.org .*/ REPLACE From: no-reply@example.org
+```
+
+**Note:** Consult `man 5 header_checks` for more information.
+
 ### SMTP
 
 That's where I'm mostly fuzzy, but that's how it works for us:

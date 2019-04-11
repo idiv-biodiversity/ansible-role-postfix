@@ -32,6 +32,30 @@
   command: newaliases
   when: postfix_aliases_configuration.changed
 
+- name: configure postfix header checks
+  copy:
+    content: '{{ postfix_header_checks.content }}'
+    dest: '{{ postfix_header_checks.dest }}'
+    owner: root
+    group: root
+    mode: 0644
+  when: >-
+    postfix_header_checks is defined and
+    postfix_header_checks.content is defined
+  register: postfix_header_checks_configuration
+
+- name: regenerate postfix header checks
+  command: 'postmap {{ postfix_header_checks.dest }}'
+  when: >-
+    postfix_header_checks_configuration is defined and
+    postfix_header_checks_configuration.changed and
+    (postfix_header_checks.type == "btree" or
+    postfix_header_checks.type == "cdb" or
+    postfix_header_checks.type == "dbm" or
+    postfix_header_checks.type == "hash" or
+    postfix_header_checks.type == "lmdb" or
+    postfix_header_checks.type == "sdbm")
+
 - name: configure postfix smtp generic mappings
   copy:
     content: '{{ postfix_smtp_generic.content }}'

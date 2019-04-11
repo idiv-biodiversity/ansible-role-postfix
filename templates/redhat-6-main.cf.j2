@@ -568,7 +568,11 @@ alias_database = hash:/etc/aliases
 #
 # For details, see "man header_checks".
 #
+{% if postfix_header_checks is defined %}
+header_checks = {{ postfix_header_checks.type }}:{{ postfix_header_checks.dest }}
+{% else %}
 #header_checks = regexp:/etc/postfix/header_checks
+{% endif %}
 
 # FAST ETRN SERVICE
 #
