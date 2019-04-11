@@ -52,24 +52,6 @@ postfix_origin: 'baz'
 postfix_relayhost: 'bippy'
 ```
 
-### Masquerading
-
-Variables regarding masquerading are lists, e.g.:
-
-```yml
-postfix_masquerade_classes:
-  - 'envelope_sender'
-  - 'header_sender'
-  - 'header_recipient'
-
-postfix_masquerade_domains:
-  - 'foo.example.org'
-  - 'bar.example.org'
-
-postfix_masquerade_exceptions:
-  - 'root'
-```
-
 ### Aliases Database
 
 The variable `postfix_aliases` configures `/etc/aliases`, e.g.:

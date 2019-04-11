@@ -367,15 +367,6 @@ relayhost = {{ postfix_relayhost }}
 # The ADDRESS_REWRITING_README document gives information about
 # address masquerading or other forms of address rewriting including
 # username->Firstname.Lastname mapping.
-{% if postfix_masquerade_classes is defined %}
-masquerade_classes = {{ postfix_masquerade_classes | join(', ') }}
-{% endif %}
-{% if postfix_masquerade_domains is defined %}
-masquerade_domains = {{ postfix_masquerade_domains | join(', ') }}
-{% endif %}
-{% if postfix_masquerade_exceptions is defined %}
-masquerade_exceptions = {{ postfix_masquerade_exceptions | join(', ') }}
-{% endif %}
 
 # ADDRESS REDIRECTION (VIRTUAL DOMAIN)
 #
