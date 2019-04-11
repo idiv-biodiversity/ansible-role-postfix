@@ -36,25 +36,6 @@
   tags:
     - postfix-aliases
 
-- name: configure postfix/main.cf
-  template:
-    src: '{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}-main.cf.j2'
-    dest: /etc/postfix/main.cf
-    owner: root
-    group: root
-    mode: '0644'
-  register: postfix_main_configured
-  tags:
-    - postfix-main
-
-- name: reload postfix
-  service:
-    name: postfix
-    state: reloaded
-  when: postfix_main_configured.changed
-  tags:
-    - postfix-main
-
 - name: configure postfix smtp generic mappings
   copy:
     content: '{{ postfix_smtp_generic.content }}'
@@ -96,6 +77,21 @@
   when: postfix_transport_configured.changed
   tags:
     - postfix-transport
+
+- name: configure main.cf
+  template:
+    src: '{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}-main.cf.j2'
+    dest: /etc/postfix/main.cf
+    owner: root
+    group: root
+    mode: '0644'
+  register: postfix_main_configuration
+
+- name: reload postfix
+  service:
+    name: postfix
+    state: reloaded
+  when: postfix_main_configuration.changed
 
 - name: enable postfix service and assure it is started
   service:
