@@ -4,6 +4,16 @@
   yum:
     name: postfix
 
+- name: get installed version
+  yum:
+    list: postfix
+  register: postfix_installed_version_getter
+
+- name: set installed version fact
+  set_fact:
+    postfix_installed_version: >-
+      {{ postfix_installed_version_getter.results.0.version }}
+
 - name: remove sendmail
   yum:
     name: sendmail

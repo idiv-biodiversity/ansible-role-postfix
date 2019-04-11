@@ -699,11 +699,11 @@ manpage_directory = /usr/share/man
 # sample_directory: The location of the Postfix sample configuration files.
 # This parameter is obsolete as of Postfix 2.1.
 #
-sample_directory = /usr/share/doc/postfix-2.10.1/samples
+sample_directory = /usr/share/doc/postfix-{{ postfix_installed_version }}/samples
 
 # readme_directory: The location of the Postfix README files.
 #
-readme_directory = /usr/share/doc/postfix-2.10.1/README_FILES
+readme_directory = /usr/share/doc/postfix-{{ postfix_installed_version }}/README_FILES
 {% if postfix_smtp_generic_maps is defined %}
 smtp_generic_maps = {{ postfix_smtp_generic_maps }}
 {% endif %}
