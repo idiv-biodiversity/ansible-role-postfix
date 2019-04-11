@@ -372,6 +372,9 @@ smtp_fallback_relay = {{ postfix_smtp_fallback_relay }}
 # The ADDRESS_REWRITING_README document gives information about
 # address masquerading or other forms of address rewriting including
 # username->Firstname.Lastname mapping.
+{% if postfix_sender_canonical is defined %}
+sender_canonical_maps = {{ postfix_sender_canonical.type }}:{{ postfix_sender_canonical.dest }}
+{% endif %}
 {% if postfix_smtp_generic is defined %}
 smtp_generic_maps = {{ postfix_smtp_generic.type }}:{{ postfix_smtp_generic.dest }}
 {% endif %}

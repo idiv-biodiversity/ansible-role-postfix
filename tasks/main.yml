@@ -56,6 +56,30 @@
     postfix_header_checks.type == "lmdb" or
     postfix_header_checks.type == "sdbm")
 
+- name: configure postfix sender canonical mappings
+  copy:
+    content: '{{ postfix_sender_canonical.content }}'
+    dest: '{{ postfix_sender_canonical.dest }}'
+    owner: root
+    group: root
+    mode: 0644
+  when: >-
+    postfix_sender_canonical is defined and
+    postfix_sender_canonical.content is defined
+  register: postfix_sender_canonical_configuration
+
+- name: regenerate postfix sender canonical mappings
+  command: 'postmap {{ postfix_sender_canonical.dest }}'
+  when: >-
+    postfix_sender_canonical_configuration is defined and
+    postfix_sender_canonical_configuration.changed and
+    (postfix_sender_canonical.type == "btree" or
+    postfix_sender_canonical.type == "cdb" or
+    postfix_sender_canonical.type == "dbm" or
+    postfix_sender_canonical.type == "hash" or
+    postfix_sender_canonical.type == "lmdb" or
+    postfix_sender_canonical.type == "sdbm")
+
 - name: configure postfix smtp generic mappings
   copy:
     content: '{{ postfix_smtp_generic.content }}'

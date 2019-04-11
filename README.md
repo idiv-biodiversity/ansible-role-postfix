@@ -106,6 +106,20 @@ envelope addresses which are used by SMTP.
 
 **Note:** Consult `man 5 generic` for more information.
 
+### Canonical Sender
+
+This lets you rewrite the sender address:
+
+```yml
+postfix_sender_canonical:
+  type: regexp
+  dest: /etc/postfix/sender_canonical
+  content: |
+    /^root@.*\.example.org$/ no-reply@example.org
+```
+
+**Note:** Consult `man 5 canonical` for more information.
+
 ### Header Checks
 
 This lets you rewrite message headers:
