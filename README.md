@@ -71,8 +71,10 @@ The variable `postfix_aliases` configures `/etc/aliases`, e.g.:
 
 ```yml
 postfix_aliases:
-  - user: 'root'
-    alias: 'admin@example.org'
+  - user: icinga
+    alias: root
+  - user: root
+    alias: admin@example.org
 ```
 
 ### Relay and Transport
@@ -88,16 +90,69 @@ Additionally, there is more fine-grained control with the transport table:
 
 ```yml
 postfix_transport:
-  type: hash
-  dest: /etc/postfix/transport
-  content: |
-    foo.org         smtp:[imap1.example.org]
-    .foo.org        smtp:[imap1.example.org]
-    bar.org         smtp:[imap2.example.org]
-    .bar.org        smtp:[imap2.example.org]
+  - type: hash
+    dest: /etc/postfix/transport
+    content: |
+      foo.org         smtp:[imap1.example.org]
+      .foo.org        smtp:[imap1.example.org]
+      bar.org         smtp:[imap2.example.org]
+      .bar.org        smtp:[imap2.example.org]
 ```
 
 **Note:** Consult `man 5 transport` for more information.
+
+### Canonical Address Mapping
+
+Rewrite recipient and sender:
+
+```yml
+postfix_canonical:
+  - type: hash
+    dest: /etc/postfix/canonical
+    content: |
+      platform@internal.domain platform@example.org
+  - type: ldap
+    dest: /etc/postfix/ldap-canonical.cf
+    content: |
+      server_host = ldap.example.org
+      search_base = dc=example, dc=org
+      query_filter = uid=%s
+      result_attribute = mail
+```
+
+Rewrite recipient:
+
+```yml
+postfix_recipient_canonical:
+  - type: hash
+    dest: /etc/postfix/recipient_canonical
+    content: |
+      root@internal.domain   admin@example.org
+      icinga@internal.domain admin@example.org
+```
+
+Rewrite sender:
+
+```yml
+postfix_sender_canonical:
+  - type: hash
+    dest: /etc/postfix/sender_canonical
+    content: |
+      root@internal.domain   support@example.org
+      icinga@internal.domain support@example.org
+```
+
+**Note:** The **canonical** address mapping mechanism is able to rewrite both
+header and envelope addresses. For headers to be rewritten you may also need to
+specify:
+
+```yml
+postfix_local_header_rewrite_clients:
+  - type: static
+    dest: all
+```
+
+**Note:** Consult `man 5 canonical` for more information.
 
 ### SMTP Generic Table
 
@@ -120,30 +175,16 @@ envelope addresses which are used by SMTP.
 
 **Note:** Consult `man 5 generic` for more information.
 
-### Canonical Sender
-
-This lets you rewrite the sender address:
-
-```yml
-postfix_sender_canonical:
-  type: regexp
-  dest: /etc/postfix/sender_canonical
-  content: |
-    /^root@.*\.example.org$/ no-reply@example.org
-```
-
-**Note:** Consult `man 5 canonical` for more information.
-
 ### Header Checks
 
-This lets you rewrite message headers:
+This lets you rewrite or reject message headers:
 
 ```yml
 postfix_header_checks:
-  type: regexp
-  dest: /etc/postfix/header_checks
-  content: |
-    /^From: root@[^ ]+\.example.org .*/ REPLACE From: no-reply@example.org
+  - type: regexp
+    dest: /etc/postfix/header_checks
+    content: |
+      /^From: root@[^ ]+\.example.org .*/ REPLACE From: no-reply@example.org
 ```
 
 **Note:** Consult `man 5 header_checks` for more information.

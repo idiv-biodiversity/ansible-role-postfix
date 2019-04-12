@@ -25,108 +25,174 @@
     dest: /etc/aliases
     owner: root
     group: root
-    mode: '0644'
+    mode: 0644
   register: postfix_aliases_configuration
 
 - name: regenerate /etc/aliases.db
   command: newaliases
   when: postfix_aliases_configuration.changed
 
-- name: configure postfix header checks
-  copy:
-    content: '{{ postfix_header_checks.content }}'
-    dest: '{{ postfix_header_checks.dest }}'
-    owner: root
-    group: root
-    mode: 0644
-  when: >-
-    postfix_header_checks is defined and
-    postfix_header_checks.content is defined
-  register: postfix_header_checks_configuration
+- block:
 
-- name: regenerate postfix header checks
-  command: 'postmap {{ postfix_header_checks.dest }}'
-  when: >-
-    postfix_header_checks_configuration is defined and
-    postfix_header_checks_configuration.changed and
-    (postfix_header_checks.type == "btree" or
-    postfix_header_checks.type == "cdb" or
-    postfix_header_checks.type == "dbm" or
-    postfix_header_checks.type == "hash" or
-    postfix_header_checks.type == "lmdb" or
-    postfix_header_checks.type == "sdbm")
+    - name: configure header_checks files
+      copy:
+        content: '{{ item.content }}'
+        dest: '{{ item.dest }}'
+        owner: root
+        group: root
+        mode: 0644
+      when: item.content is defined
+      register: postfix_header_checks_configuration
+      loop: '{{ postfix_header_checks }}'
 
-- name: configure postfix sender canonical mappings
-  copy:
-    content: '{{ postfix_sender_canonical.content }}'
-    dest: '{{ postfix_sender_canonical.dest }}'
-    owner: root
-    group: root
-    mode: 0644
-  when: >-
-    postfix_sender_canonical is defined and
-    postfix_sender_canonical.content is defined
-  register: postfix_sender_canonical_configuration
+    - name: regenerate header_checks files
+      command: 'postmap {{ item.item.dest }}'
+      when: >
+        item.changed and
+        (item.item.type == "btree" or
+        item.item.type == "cdb" or
+        item.item.type == "dbm" or
+        item.item.type == "hash" or
+        item.item.type == "lmdb" or
+        item.item.type == "sdbm")
+      loop: '{{ postfix_header_checks_configuration.results }}'
 
-- name: regenerate postfix sender canonical mappings
-  command: 'postmap {{ postfix_sender_canonical.dest }}'
-  when: >-
-    postfix_sender_canonical_configuration is defined and
-    postfix_sender_canonical_configuration.changed and
-    (postfix_sender_canonical.type == "btree" or
-    postfix_sender_canonical.type == "cdb" or
-    postfix_sender_canonical.type == "dbm" or
-    postfix_sender_canonical.type == "hash" or
-    postfix_sender_canonical.type == "lmdb" or
-    postfix_sender_canonical.type == "sdbm")
+  when: postfix_header_checks is defined
 
-- name: configure postfix smtp generic mappings
-  copy:
-    content: '{{ postfix_smtp_generic.content }}'
-    dest: '{{ postfix_smtp_generic.dest }}'
-    owner: root
-    group: root
-    mode: 0644
-  when: >-
-    postfix_smtp_generic is defined and
-    postfix_smtp_generic.content is defined
-  register: postfix_smtp_generic_configuration
+- block:
 
-- name: regenerate postfix smtp generic mappings
-  command: 'postmap {{ postfix_smtp_generic.dest }}'
-  when: >-
-    postfix_smtp_generic_configuration is defined and
-    postfix_smtp_generic_configuration.changed and
-    (postfix_smtp_generic.type == "btree" or
-    postfix_smtp_generic.type == "cdb" or
-    postfix_smtp_generic.type == "dbm" or
-    postfix_smtp_generic.type == "hash" or
-    postfix_smtp_generic.type == "lmdb" or
-    postfix_smtp_generic.type == "sdbm")
+    - name: configure canonical_maps files
+      copy:
+        content: '{{ item.content }}'
+        dest: '{{ item.dest }}'
+        owner: root
+        group: root
+        mode: 0644
+      when: item.content is defined
+      register: postfix_canonical_configuration
+      loop: '{{ postfix_canonical }}'
 
-- name: configure postfix transport mappings
-  copy:
-    content: '{{ postfix_transport.content }}'
-    dest: '{{ postfix_transport.dest }}'
-    owner: root
-    group: root
-    mode: 0644
-  when: >-
-    postfix_transport is defined and
-    postfix_transport.content is defined
-  register: postfix_transport_configuration
+    - name: regenerate canonical_maps files
+      command: 'postmap {{ item.item.dest }}'
+      when: >
+        item.changed and
+        (item.item.type == "btree" or
+        item.item.type == "cdb" or
+        item.item.type == "dbm" or
+        item.item.type == "hash" or
+        item.item.type == "lmdb" or
+        item.item.type == "sdbm")
+      loop: '{{ postfix_canonical_configuration.results }}'
 
-- name: regenerate postfix transport mappings
-  command: 'postmap {{ postfix_transport.dest }}'
-  when: >-
-    postfix_transport_configuration is defined and
-    postfix_transport_configuration.changed and
-    (postfix_transport.type == "btree" or
-    postfix_transport.type == "cdb" or
-    postfix_transport.type == "dbm" or
-    postfix_transport.type == "hash" or
-    postfix_transport.type == "lmdb" or
-    postfix_transport.type == "sdbm")
+  when: postfix_canonical is defined
+
+- block:
+
+    - name: configure recipient_canonical_maps files
+      copy:
+        content: '{{ item.content }}'
+        dest: '{{ item.dest }}'
+        owner: root
+        group: root
+        mode: 0644
+      when: item.content is defined
+      register: postfix_recipient_canonical_configuration
+      loop: '{{ postfix_recipient_canonical }}'
+
+    - name: regenerate recipient_canonical_maps files
+      command: 'postmap {{ item.item.dest }}'
+      when: >
+        item.changed and
+        (item.item.type == "btree" or
+        item.item.type == "cdb" or
+        item.item.type == "dbm" or
+        item.item.type == "hash" or
+        item.item.type == "lmdb" or
+        item.item.type == "sdbm")
+      loop: '{{ postfix_recipient_canonical_configuration.results }}'
+
+  when: postfix_recipient_canonical is defined
+
+- block:
+
+    - name: configure sender_canonical_maps files
+      copy:
+        content: '{{ item.content }}'
+        dest: '{{ item.dest }}'
+        owner: root
+        group: root
+        mode: 0644
+      when: item.content is defined
+      register: postfix_sender_canonical_configuration
+      loop: '{{ postfix_sender_canonical }}'
+
+    - name: regenerate sender_canonical_maps files
+      command: 'postmap {{ item.item.dest }}'
+      when: >
+        item.changed and
+        (item.item.type == "btree" or
+        item.item.type == "cdb" or
+        item.item.type == "dbm" or
+        item.item.type == "hash" or
+        item.item.type == "lmdb" or
+        item.item.type == "sdbm")
+      loop: '{{ postfix_sender_canonical_configuration.results }}'
+
+  when: postfix_sender_canonical is defined
+
+- block:
+
+    - name: configure smtp_generic_maps files
+      copy:
+        content: '{{ item.content }}'
+        dest: '{{ item.dest }}'
+        owner: root
+        group: root
+        mode: 0644
+      when: item.content is defined
+      register: postfix_smtp_generic_configuration
+      loop: '{{ postfix_smtp_generic }}'
+
+    - name: regenerate smtp_generic_maps files
+      command: 'postmap {{ item.item.dest }}'
+      when: >
+        item.changed and
+        (item.item.type == "btree" or
+        item.item.type == "cdb" or
+        item.item.type == "dbm" or
+        item.item.type == "hash" or
+        item.item.type == "lmdb" or
+        item.item.type == "sdbm")
+      loop: '{{ postfix_smtp_generic_configuration.results }}'
+
+  when: postfix_smtp_generic is defined
+
+- block:
+
+    - name: configure transport_maps files
+      copy:
+        content: '{{ item.content }}'
+        dest: '{{ item.dest }}'
+        owner: root
+        group: root
+        mode: 0644
+      when: item.content is defined
+      register: postfix_transport_configuration
+      loop: '{{ postfix_transport }}'
+
+    - name: regenerate transport_maps files
+      command: 'postmap {{ item.item.dest }}'
+      when: >
+        item.changed and
+        (item.item.type == "btree" or
+        item.item.type == "cdb" or
+        item.item.type == "dbm" or
+        item.item.type == "hash" or
+        item.item.type == "lmdb" or
+        item.item.type == "sdbm")
+      loop: '{{ postfix_transport_configuration.results }}'
+
+  when: postfix_transport is defined
 
 - name: check if inet_interfaces will change
   lineinfile:
@@ -138,8 +204,7 @@
 
 - name: set needs restart fact
   set_fact:
-    postfix_needs_restart: >
-      {{ postfix_inet_interfaces_precheck.changed }}
+    postfix_needs_restart: '{{ postfix_inet_interfaces_precheck.changed }}'
 
 - name: configure main.cf
   template:
@@ -147,10 +212,10 @@
     dest: /etc/postfix/main.cf
     owner: root
     group: root
-    mode: '0644'
+    mode: 0644
   register: postfix_main_configuration
 
-- name: reload postfix
+- name: reload postfix service
   service:
     name: postfix
     state: reloaded
@@ -158,7 +223,7 @@
     postfix_main_configuration.changed and
     not postfix_needs_restart
 
-- name: restart postfix
+- name: restart postfix service
   service:
     name: postfix
     state: restarted

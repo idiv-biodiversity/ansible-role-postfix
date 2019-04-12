@@ -372,11 +372,20 @@ smtp_fallback_relay = {{ postfix_smtp_fallback_relay }}
 # The ADDRESS_REWRITING_README document gives information about
 # address masquerading or other forms of address rewriting including
 # username->Firstname.Lastname mapping.
+{% if postfix_canonical is defined %}
+canonical_maps = {{ postfix_canonical | postfix_type_join }}
+{% endif %}
+{% if postfix_recipient_canonical is defined %}
+recipient_canonical_maps = {{ postfix_recipient_canonical | postfix_type_join }}
+{% endif %}
 {% if postfix_sender_canonical is defined %}
-sender_canonical_maps = {{ postfix_sender_canonical.type }}:{{ postfix_sender_canonical.dest }}
+sender_canonical_maps = {{ postfix_sender_canonical | postfix_type_join }}
 {% endif %}
 {% if postfix_smtp_generic is defined %}
-smtp_generic_maps = {{ postfix_smtp_generic.type }}:{{ postfix_smtp_generic.dest }}
+smtp_generic_maps = {{ postfix_smtp_generic | postfix_type_join }}
+{% endif %}
+{% if postfix_local_header_rewrite_clients is defined %}
+local_header_rewrite_clients = {{ postfix_local_header_rewrite_clients | postfix_type_join }}
 {% endif %}
 
 # ADDRESS REDIRECTION (VIRTUAL DOMAIN)
@@ -392,7 +401,7 @@ smtp_generic_maps = {{ postfix_smtp_generic.type }}:{{ postfix_smtp_generic.dest
 #
 # See the discussion in the ADDRESS_REWRITING_README document.
 {% if postfix_transport is defined %}
-transport_maps = {{ postfix_transport.type }}:{{ postfix_transport.dest }}
+transport_maps = {{ postfix_transport | postfix_type_join }}
 {% endif %}
 
 # ALIAS DATABASE
@@ -575,7 +584,7 @@ alias_database = hash:/etc/aliases
 # For details, see "man header_checks".
 #
 {% if postfix_header_checks is defined %}
-header_checks = {{ postfix_header_checks.type }}:{{ postfix_header_checks.dest }}
+header_checks = {{ postfix_header_checks | postfix_type_join }}
 {% else %}
 #header_checks = regexp:/etc/postfix/header_checks
 {% endif %}
