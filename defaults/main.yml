@@ -3,4 +3,9 @@
 postfix_inet_interfaces:
   - localhost
 
+postfix_destinations:
+  - $myhostname
+  - localhost.$mydomain
+  - localhost
+
 ...

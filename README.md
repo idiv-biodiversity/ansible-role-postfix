@@ -47,6 +47,11 @@ Variables with defaults:
 ```yml
 postfix_inet_interfaces:
   - localhost
+
+postfix_destinations:
+  - $myhostname
+  - localhost.$mydomain
+  - localhost
 ```
 
 These variables are empty by default, but postfix has its own defaults for
