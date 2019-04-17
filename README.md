@@ -11,12 +11,14 @@ Table of Contents
 - [Requirements](#requirements)
 - [Role Variables](#role-variables)
   * [Basic Variables](#basic-variables)
+  * [Masquerading](#masquerading)
   * [Aliases](#aliases)
   * [Relay and Transport](#relay-and-transport)
+  * [Canonical Address Mapping](#canonical-address-mapping)
   * [SMTP Generic Table](#smtp-generic-table)
-  * [Canonical Sender](#canonical-sender)
   * [Header Checks](#header-checks)
   * [SMTP](#smtp)
+  * [Automatic Header Rewriting](#automatic-header-rewriting)
 - [Dependencies](#dependencies)
 - [Example Playbook](#example-playbook)
   * [Top-Level Playbook](#top-level-playbook)
@@ -64,6 +66,37 @@ postfix_origin: example.org
 ```
 
 **Note:** Consult `man 5 postconf` for more information.
+
+### Masquerading
+
+Masquerading can strip off subdomain structure, e.g. to rewrite
+**user@sub.domain.example.org** to **user@example.org**:
+
+```yml
+postfix_masquerade_domains:
+  - example.org
+```
+
+Addresses that will be changed by masquerading:
+
+```yml
+postfix_masquerade_classes:
+  - envelope_sender
+  - envelope_recipient
+  - header_sender
+  - header_recipient
+```
+
+Users who are exceptions to masquerading:
+
+```yml
+postfix_masquerade_exceptions:
+  - root
+```
+
+**Note:** Masquerading address mapping mechanism is able to rewrite both header
+and envelope addresses. For headers to be rewritten, see the section about
+[Automatic Header Rewriting](#automatic-header-rewriting).
 
 ### Aliases
 
@@ -143,14 +176,8 @@ postfix_sender_canonical:
 ```
 
 **Note:** The **canonical** address mapping mechanism is able to rewrite both
-header and envelope addresses. For headers to be rewritten you may also need to
-specify:
-
-```yml
-postfix_local_header_rewrite_clients:
-  - type: static
-    dest: all
-```
+header and envelope addresses. For headers to be rewritten, see the section
+about [Automatic Header Rewriting](#automatic-header-rewriting).
 
 **Note:** Consult `man 5 canonical` for more information.
 
@@ -213,6 +240,21 @@ postfix_tls_random_source: 'dev:/dev/urandom'
 ```
 
 **Note:** At the moment, PEM files need to be copied manually.
+
+### Automatic Header Rewriting
+
+Starting with Postfix 2.2 automatic message header rewriting has been disabled
+by default. Instead, only envelope addresses get rewritten. This applies to the
+address rewriting facilities. Check `man 5 postconf` to see if it applies to
+your configuration entries.
+
+To get the behavior before Postfix 2.2, add this variable:
+
+```yml
+postfix_local_header_rewrite_clients:
+  - type: static
+    dest: all
+```
 
 Dependencies
 ------------
