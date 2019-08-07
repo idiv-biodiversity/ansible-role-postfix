@@ -50,6 +50,8 @@ Variables with defaults:
 postfix_inet_interfaces:
   - localhost
 
+postfix_inet_protocols: all
+
 postfix_destinations:
   - $myhostname
   - localhost.$mydomain
