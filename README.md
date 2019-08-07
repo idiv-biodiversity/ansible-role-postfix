@@ -50,6 +50,8 @@ Variables with defaults:
 postfix_inet_interfaces:
   - localhost
 
+postfix_inet_protocols: all
+
 postfix_destinations:
   - $myhostname
   - localhost.$mydomain
@@ -63,7 +65,6 @@ them. Check `postconf -d | grep ^my` for their defaults.
 postfix_hostname: host.example.org
 postfix_domain: example.org
 postfix_origin: example.org
-postfix_inet_protocols: all
 ```
 
 **Note:** Consult `man 5 postconf` for more information.
