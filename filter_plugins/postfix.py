@@ -1,6 +1,7 @@
 from ansible.errors import AnsibleFilterError
 from ansible.module_utils.common.collections import is_sequence
 
+
 def postfix_type_join(mylist):
     if not is_sequence(mylist):
         raise AnsibleFilterError("list required, got %s" % type(mylist))
@@ -13,8 +14,9 @@ def postfix_type_join(mylist):
 
     return ", ".join(ret_list)
 
+
 class FilterModule(object):
     def filters(self):
-       return {
-           'postfix_type_join': postfix_type_join
-       }
+        return {
+            'postfix_type_join': postfix_type_join
+        }
