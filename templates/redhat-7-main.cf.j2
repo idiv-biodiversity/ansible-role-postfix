@@ -733,46 +733,46 @@ sample_directory = /usr/share/doc/postfix-{{ postfix_installed_version }}/sample
 #
 readme_directory = /usr/share/doc/postfix-{{ postfix_installed_version }}/README_FILES
 {% if postfix_smtp is defined %}
-{% if postfix_smtp.tls_note_starttls_offer is defined %}
-smtp_tls_note_starttls_offer = {{ postfix_smtp.tls_note_starttls_offer }}
+{% if postfix_smtp.tls.note_starttls_offer is defined %}
+smtp_tls_note_starttls_offer = {{ postfix_smtp.tls.note_starttls_offer }}
 {% endif %}
-{% if postfix_smtp.tls_CApath is defined %}
-smtp_tls_CApath = {{ postfix_smtp.tls_CApath }}
+{% if postfix_smtp.tls.CApath is defined %}
+smtp_tls_CApath = {{ postfix_smtp.tls.CApath }}
 {% endif %}
-{% if postfix_smtp.tls_security_level is defined %}
-smtp_tls_security_level = {{ postfix_smtp.tls_security_level }}
+{% if postfix_smtp.tls.security_level is defined %}
+smtp_tls_security_level = {{ postfix_smtp.tls.security_level }}
 {% endif %}
-{% if postfix_smtp.tls_cert_file is defined %}
-smtp_tls_cert_file = {{ postfix_smtp.tls_cert_file }}
+{% if postfix_smtp.tls.cert_file is defined %}
+smtp_tls_cert_file = {{ postfix_smtp.tls.cert_file }}
 {% endif %}
-{% if postfix_smtp.tls_key_file is defined %}
-smtp_tls_key_file = {{ postfix_smtp.tls_key_file }}
+{% if postfix_smtp.tls.key_file is defined %}
+smtp_tls_key_file = {{ postfix_smtp.tls.key_file }}
 {% endif %}
 {% endif %}
 {% if postfix_smtpd is defined %}
-{% if postfix_smtpd.tls_CApath is defined %}
-smtpd_tls_CApath = {{ postfix_smtpd.tls_CApath }}
+{% if postfix_smtpd.tls.CApath is defined %}
+smtpd_tls_CApath = {{ postfix_smtpd.tls.CApath }}
 {% endif %}
-{% if postfix_smtpd.tls_security_level is defined %}
-smtpd_tls_security_level = {{ postfix_smtpd.tls_security_level }}
+{% if postfix_smtpd.tls.security_level is defined %}
+smtpd_tls_security_level = {{ postfix_smtpd.tls.security_level }}
 {% endif %}
-{% if postfix_smtpd.tls_auth_only is defined %}
-smtpd_tls_auth_only = {{ postfix_smtpd.tls_auth_only }}
+{% if postfix_smtpd.tls.auth_only is defined %}
+smtpd_tls_auth_only = {{ postfix_smtpd.tls.auth_only }}
 {% endif %}
-{% if postfix_smtpd.tls_cert_file is defined %}
-smtpd_tls_cert_file = {{ postfix_smtpd.tls_cert_file }}
+{% if postfix_smtpd.tls.cert_file is defined %}
+smtpd_tls_cert_file = {{ postfix_smtpd.tls.cert_file }}
 {% endif %}
-{% if postfix_smtpd.tls_key_file is defined %}
-smtpd_tls_key_file = {{ postfix_smtpd.tls_key_file }}
+{% if postfix_smtpd.tls.key_file is defined %}
+smtpd_tls_key_file = {{ postfix_smtpd.tls.key_file }}
 {% endif %}
-{% if postfix_smtpd.tls_loglevel is defined %}
-smtpd_tls_loglevel = {{ postfix_smtpd.tls_loglevel }}
+{% if postfix_smtpd.tls.loglevel is defined %}
+smtpd_tls_loglevel = {{ postfix_smtpd.tls.loglevel }}
 {% endif %}
-{% if postfix_smtpd.tls_received_header is defined %}
-smtpd_tls_received_header = {{ postfix_smtpd.tls_received_header }}
+{% if postfix_smtpd.tls.received_header is defined %}
+smtpd_tls_received_header = {{ postfix_smtpd.tls.received_header }}
 {% endif %}
-{% if postfix_smtpd.tls_session_cache_timeout is defined %}
-smtpd_tls_session_cache_timeout = {{ postfix_smtpd.tls_session_cache_timeout }}
+{% if postfix_smtpd.tls.session_cache_timeout is defined %}
+smtpd_tls_session_cache_timeout = {{ postfix_smtpd.tls.session_cache_timeout }}
 {% endif %}
 {% endif %}
 {% if postfix_tls_random_source is defined %}
