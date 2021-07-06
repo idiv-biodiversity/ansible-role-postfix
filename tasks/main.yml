@@ -1,26 +1,26 @@
 ---
 
 - name: install postfix
-  yum:
+  ansible.builtin.yum:
     name: postfix
 
 - name: get installed version
-  yum:
+  ansible.builtin.yum:
     list: postfix
   register: postfix_installed_version_getter
 
 - name: set installed version fact
-  set_fact:
+  ansible.builtin.set_fact:
     postfix_installed_version: >-
       {{ postfix_installed_version_getter.results.0.version }}
 
 - name: remove sendmail
-  yum:
+  ansible.builtin.yum:
     name: sendmail
     state: absent
 
 - name: configure /etc/aliases
-  template:
+  ansible.builtin.template:
     src: '{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}-aliases.j2'
     dest: /etc/aliases
     owner: root
@@ -29,13 +29,15 @@
   register: postfix_aliases_configuration
 
 - name: regenerate /etc/aliases.db
-  command: newaliases
+  ansible.builtin.command: newaliases
   when: postfix_aliases_configuration.changed
 
-- block:
+- name: header_checks
+  when: postfix_header_checks is defined
+  block:
 
     - name: configure header_checks files
-      copy:
+      ansible.builtin.copy:
         content: '{{ item.content }}'
         dest: '{{ item.dest }}'
         owner: root
@@ -46,7 +48,7 @@
       loop: '{{ postfix_header_checks }}'
 
     - name: regenerate header_checks files
-      command: 'postmap {{ item.item.dest }}'
+      ansible.builtin.command: 'postmap {{ item.item.dest }}'
       when: >
         item.changed and
         (item.item.type == "btree" or
@@ -57,12 +59,12 @@
         item.item.type == "sdbm")
       loop: '{{ postfix_header_checks_configuration.results }}'
 
-  when: postfix_header_checks is defined
-
-- block:
+- name: canonical_maps
+  when: postfix_canonical is defined
+  block:
 
     - name: configure canonical_maps files
-      copy:
+      ansible.builtin.copy:
         content: '{{ item.content }}'
         dest: '{{ item.dest }}'
         owner: root
@@ -73,7 +75,7 @@
       loop: '{{ postfix_canonical }}'
 
     - name: regenerate canonical_maps files
-      command: 'postmap {{ item.item.dest }}'
+      ansible.builtin.command: 'postmap {{ item.item.dest }}'
       when: >
         item.changed and
         (item.item.type == "btree" or
@@ -84,12 +86,12 @@
         item.item.type == "sdbm")
       loop: '{{ postfix_canonical_configuration.results }}'
 
-  when: postfix_canonical is defined
-
-- block:
+- name: recipient_canonical_maps
+  when: postfix_recipient_canonical is defined
+  block:
 
     - name: configure recipient_canonical_maps files
-      copy:
+      ansible.builtin.copy:
         content: '{{ item.content }}'
         dest: '{{ item.dest }}'
         owner: root
@@ -100,7 +102,7 @@
       loop: '{{ postfix_recipient_canonical }}'
 
     - name: regenerate recipient_canonical_maps files
-      command: 'postmap {{ item.item.dest }}'
+      ansible.builtin.command: 'postmap {{ item.item.dest }}'
       when: >
         item.changed and
         (item.item.type == "btree" or
@@ -111,12 +113,12 @@
         item.item.type == "sdbm")
       loop: '{{ postfix_recipient_canonical_configuration.results }}'
 
-  when: postfix_recipient_canonical is defined
-
-- block:
+- name: sender_canonical_maps
+  when: postfix_sender_canonical is defined
+  block:
 
     - name: configure sender_canonical_maps files
-      copy:
+      ansible.builtin.copy:
         content: '{{ item.content }}'
         dest: '{{ item.dest }}'
         owner: root
@@ -127,7 +129,7 @@
       loop: '{{ postfix_sender_canonical }}'
 
     - name: regenerate sender_canonical_maps files
-      command: 'postmap {{ item.item.dest }}'
+      ansible.builtin.command: 'postmap {{ item.item.dest }}'
       when: >
         item.changed and
         (item.item.type == "btree" or
@@ -138,12 +140,12 @@
         item.item.type == "sdbm")
       loop: '{{ postfix_sender_canonical_configuration.results }}'
 
-  when: postfix_sender_canonical is defined
-
-- block:
+- name: smtp_generic_maps
+  when: postfix_smtp_generic is defined
+  block:
 
     - name: configure smtp_generic_maps files
-      copy:
+      ansible.builtin.copy:
         content: '{{ item.content }}'
         dest: '{{ item.dest }}'
         owner: root
@@ -154,7 +156,7 @@
       loop: '{{ postfix_smtp_generic }}'
 
     - name: regenerate smtp_generic_maps files
-      command: 'postmap {{ item.item.dest }}'
+      ansible.builtin.command: 'postmap {{ item.item.dest }}'
       when: >
         item.changed and
         (item.item.type == "btree" or
@@ -165,12 +167,12 @@
         item.item.type == "sdbm")
       loop: '{{ postfix_smtp_generic_configuration.results }}'
 
-  when: postfix_smtp_generic is defined
-
-- block:
+- name: transport_maps
+  when: postfix_transport is defined
+  block:
 
     - name: configure transport_maps files
-      copy:
+      ansible.builtin.copy:
         content: '{{ item.content }}'
         dest: '{{ item.dest }}'
         owner: root
@@ -181,7 +183,7 @@
       loop: '{{ postfix_transport }}'
 
     - name: regenerate transport_maps files
-      command: 'postmap {{ item.item.dest }}'
+      ansible.builtin.command: 'postmap {{ item.item.dest }}'
       when: >
         item.changed and
         (item.item.type == "btree" or
@@ -192,10 +194,8 @@
         item.item.type == "sdbm")
       loop: '{{ postfix_transport_configuration.results }}'
 
-  when: postfix_transport is defined
-
 - name: check if inet_interfaces will change
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/postfix/main.cf
     regexp: '^inet_interfaces = '
     line: 'inet_interfaces = {{ postfix_inet_interfaces | join(", ") }}'
@@ -203,11 +203,11 @@
   register: postfix_inet_interfaces_precheck
 
 - name: set needs restart fact
-  set_fact:
+  ansible.builtin.set_fact:
     postfix_needs_restart: '{{ postfix_inet_interfaces_precheck.changed }}'
 
 - name: configure main.cf
-  template:
+  ansible.builtin.template:
     src: '{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}-main.cf.j2'
     dest: /etc/postfix/main.cf
     owner: root
@@ -216,7 +216,7 @@
   register: postfix_main_configuration
 
 - name: reload postfix service
-  service:
+  ansible.builtin.service:
     name: postfix
     state: reloaded
   when: >
@@ -224,7 +224,7 @@
     not postfix_needs_restart
 
 - name: restart postfix service
-  service:
+  ansible.builtin.service:
     name: postfix
     state: restarted
   when: >
@@ -232,7 +232,7 @@
     postfix_needs_restart
 
 - name: enable postfix service and assure it is started
-  service:
+  ansible.builtin.service:
     name: postfix
     enabled: yes
     state: started

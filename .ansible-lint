@@ -1,6 +1,8 @@
 ---
 
 skip_list:
-  - ANSIBLE0016
+  - name[casing]
+  - no-handler
+  - role-name
 
 ...
