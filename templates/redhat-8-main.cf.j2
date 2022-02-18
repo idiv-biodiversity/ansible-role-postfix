@@ -7,7 +7,7 @@
 # For common configuration examples, see BASIC_CONFIGURATION_README
 # and STANDARD_CONFIGURATION_README. To find these documents, use
 # the command "postconf html_directory readme_directory", or go to
-# http://www.postfix.org/.
+# http://www.postfix.org/BASIC_CONFIGURATION_README.html etc.
 #
 # For best results, change no more than 2-3 parameters at a time,
 # and test if Postfix still works after every change.
@@ -175,8 +175,8 @@ inet_protocols = all
 # compatible delivery agent that lookups all recipients in /etc/passwd
 # and /etc/aliases or their equivalent.
 #
-# The default is $myhostname + localhost.$mydomain.  On a mail domain
-# gateway, you should also include $mydomain.
+# The default is $myhostname + localhost.$mydomain + localhost.  On
+# a mail domain gateway, you should also include $mydomain.
 #
 # Do not specify the names of virtual domains - those domains are
 # specified elsewhere (see VIRTUAL_README).
@@ -271,7 +271,7 @@ unknown_local_recipient_reject_code = 550
 #
 # By default (mynetworks_style = subnet), Postfix "trusts" SMTP
 # clients in the same IP subnetworks as the local machine.
-# On Linux, this does works correctly only with interfaces specified
+# On Linux, this works correctly only with interfaces specified
 # with the "ifconfig" command.
 # 
 # Specify "mynetworks_style = class" when Postfix should "trust" SMTP
@@ -554,7 +554,7 @@ alias_database = hash:/etc/aliases
 # can be used to take advantage of the single instance message store
 # capability of Cyrus. The concurrency limit can be used to control
 # how many simultaneous LMTP sessions will be permitted to the Cyrus
-# message store. 
+# message store.
 #
 # Cyrus IMAP via command line. Uncomment the "cyrus...pipe" and
 # subsequent line in master.cf.
@@ -701,7 +701,7 @@ debugger_command =
 #	>$config_directory/$process_name.$process_id.log & sleep 5
 #
 # Another possibility is to run gdb under a detached screen session.
-# To attach to the screen sesssion, su root and run "screen -r
+# To attach to the screen session, su root and run "screen -r
 # <id_string>" where <id_string> uniquely matches one of the detached
 # sessions (from "screen -list").
 #
@@ -746,11 +746,11 @@ manpage_directory = /usr/share/man
 # sample_directory: The location of the Postfix sample configuration files.
 # This parameter is obsolete as of Postfix 2.1.
 #
-sample_directory = /usr/share/doc/postfix-{{ postfix_installed_version }}/samples
+sample_directory = /usr/share/doc/postfix/samples
 
 # readme_directory: The location of the Postfix README files.
 #
-readme_directory = /usr/share/doc/postfix-{{ postfix_installed_version }}/README_FILES
+readme_directory = /usr/share/doc/postfix/README_FILES
 
 # TLS CONFIGURATION
 #
@@ -776,6 +776,7 @@ smtpd_tls_key_file = {{ postfix_smtpd.tls_key_file }}
 {% else %}
 smtpd_tls_key_file = /etc/pki/tls/private/postfix.key
 {% endif %}
+
 # Announce STARTTLS support to remote SMTP clients, but do not require that
 # clients use TLS encryption (opportunistic TLS inbound).
 #
@@ -786,8 +787,6 @@ smtpd_tls_security_level = may
 {% endif %}
 {% if postfix_smtpd is defined and postfix_smtpd.tls_CApath is defined %}
 smtpd_tls_CApath = {{ postfix_smtpd.tls_CApath }}
-{% else %}
-smtpd_tls_CApath = /etc/pki/tls/certs
 {% endif %}
 {% if postfix_smtpd is defined and postfix_smtpd.tls_auth_only is defined %}
 smtpd_tls_auth_only = {{ postfix_smtpd.tls_auth_only }}
@@ -807,6 +806,8 @@ smtpd_tls_session_cache_timeout = {{ postfix_smtpd.tls_session_cache_timeout }}
 #
 {% if postfix_smtp is defined and postfix_smtp.tls_CApath is defined %}
 smtp_tls_CApath = {{ postfix_smtp.tls_CApath }}
+{% else %}
+smtp_tls_CApath = /etc/pki/tls/certs
 {% endif %}
 
 # The full pathname of a file containing CA certificates of root CAs
@@ -815,6 +816,8 @@ smtp_tls_CApath = {{ postfix_smtp.tls_CApath }}
 #
 {% if postfix_smtp is defined and postfix_smtp.tls_CAfile is defined %}
 smtp_tls_CAfile = {{ postfix_smtp.tls_CAfile }}
+{% else %}
+smtp_tls_CAfile = /etc/pki/tls/certs/ca-bundle.crt
 {% endif %}
 
 # Use TLS if this is supported by the remote SMTP server, otherwise use
@@ -837,7 +840,6 @@ smtp_tls_cert_file = {{ postfix_smtp.tls_cert_file }}
 {% if postfix_smtp is defined and postfix_smtp.tls_key_file is defined %}
 smtp_tls_key_file = {{ postfix_smtp.tls_key_file }}
 {% endif %}
-
 {% if postfix_tls_random_source is defined %}
 tls_random_source = {{ postfix_tls_random_source }}
 {% endif %}
