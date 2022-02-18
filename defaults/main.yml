@@ -1,5 +1,7 @@
 ---
 
+postfix_compatibility_level: '2'
+
 postfix_inet_interfaces:
   - localhost
 
