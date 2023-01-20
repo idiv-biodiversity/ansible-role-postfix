@@ -231,43 +231,6 @@
         item.item.type == "sdbm")
       loop: '{{ postfix_transport_configuration.results }}'
 
-- name: check if inet_interfaces will change
-  ansible.builtin.lineinfile:
-    path: /etc/postfix/main.cf
-    regexp: '^inet_interfaces = '
-    line: 'inet_interfaces = {{ postfix_inet_interfaces | join(", ") }}'
-  check_mode: yes
-  register: postfix_inet_interfaces_precheck
-
-- name: set needs restart fact
-  ansible.builtin.set_fact:
-    postfix_needs_restart: '{{ postfix_inet_interfaces_precheck.changed }}'
-
-- name: configure main.cf
-  ansible.builtin.template:
-    src: '{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}-main.cf.j2'
-    dest: /etc/postfix/main.cf
-    owner: root
-    group: root
-    mode: 0644
-  register: postfix_main_configuration
-
-- name: reload postfix service
-  ansible.builtin.service:
-    name: postfix
-    state: reloaded
-  when: >
-    postfix_main_configuration.changed and
-    not postfix_needs_restart
-
-- name: restart postfix service
-  ansible.builtin.service:
-    name: postfix
-    state: restarted
-  when: >
-    postfix_main_configuration.changed and
-    postfix_needs_restart
-
 - name: enable postfix service and assure it is started
   ansible.builtin.service:
     name: postfix
