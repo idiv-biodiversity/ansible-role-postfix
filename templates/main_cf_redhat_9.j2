@@ -834,9 +834,6 @@ smtp_tls_note_starttls_offer = {{ postfix_smtp.tls_note_starttls_offer }}
 {% if postfix_smtp is defined and postfix_smtp.tls_cert_file is defined %}
 smtp_tls_cert_file = {{ postfix_smtp.tls_cert_file }}
 {% endif %}
-{% if postfix_smtp is defined and postfix_smtp.tls_cert_file is defined %}
-smtp_tls_cert_file = {{ postfix_smtp.tls_cert_file }}
-{% endif %}
 {% if postfix_smtp is defined and postfix_smtp.tls_key_file is defined %}
 smtp_tls_key_file = {{ postfix_smtp.tls_key_file }}
 {% endif %}
