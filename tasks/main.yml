@@ -33,7 +33,7 @@
 
 - name: configure main.cf
   ansible.builtin.template:
-    src: '{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}-main.cf.j2'
+    src: '{{ lookup("first_found", __postfix_main_cf_templates) }}'
     dest: /etc/postfix/main.cf
     owner: root
     group: root
@@ -58,7 +58,7 @@
 
 - name: configure /etc/aliases
   ansible.builtin.template:
-    src: '{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}-aliases.j2'
+    src: '{{ lookup("first_found", __postfix_aliases_templates) }}'
     dest: /etc/aliases
     owner: root
     group: root

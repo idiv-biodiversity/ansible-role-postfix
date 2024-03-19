@@ -1,0 +1,52 @@
+---
+
+# -----------------------------------------------------------------------------
+# distro / os handles
+# -----------------------------------------------------------------------------
+
+__postfix_distro: >-
+  {{ ansible_distribution | lower }}
+
+__postfix_os: >-
+  {{ ansible_os_family | lower }}
+
+__postfix_distro_version: >-
+  {{ __postfix_distro }}_{{ ansible_distribution_major_version }}
+
+__postfix_os_version: >-
+  {{ __postfix_os }}_{{ ansible_distribution_major_version }}
+
+# -----------------------------------------------------------------------------
+# first found snippets
+# -----------------------------------------------------------------------------
+
+__postfix_first_found:
+  - '{{ __postfix_distro_version }}'
+  - '{{ __postfix_os_version }}'
+  - '{{ __postfix_distro }}'
+  - '{{ __postfix_os }}'
+  - default
+
+__postfix_main_cf_templates:
+  files: >-
+    {{
+      __postfix_first_found |
+        map('regex_replace', '^', 'main_cf_') |
+        map('regex_replace', '$', '.j2') |
+        list
+    }}
+  paths:
+    - templates
+
+__postfix_aliases_templates:
+  files: >-
+    {{
+      __postfix_first_found |
+        map('regex_replace', '^', 'aliases_') |
+        map('regex_replace', '$', '.j2') |
+        list
+    }}
+  paths:
+    - templates
+
+...
