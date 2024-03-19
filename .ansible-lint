@@ -3,6 +3,5 @@
 skip_list:
   - name[casing]
   - no-handler
-  - role-name
 
 ...
