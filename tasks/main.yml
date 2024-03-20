@@ -7,12 +7,12 @@
 - name: get installed version
   ansible.builtin.yum:
     list: postfix
-  register: postfix_installed_version_getter
+  register: __postfix_installed_version_getter
 
 - name: set installed version fact
   ansible.builtin.set_fact:
-    postfix_installed_version: >-
-      {{ postfix_installed_version_getter.results.0.version }}
+    __postfix_installed_version: >-
+      {{ __postfix_installed_version_getter.results.0.version }}
 
 - name: remove sendmail
   ansible.builtin.yum:
@@ -25,11 +25,11 @@
     regexp: '^inet_interfaces = '
     line: 'inet_interfaces = {{ postfix_inet_interfaces | join(", ") }}'
   check_mode: yes
-  register: postfix_inet_interfaces_precheck
+  register: __postfix_inet_interfaces_precheck
 
 - name: set needs restart fact
   ansible.builtin.set_fact:
-    postfix_needs_restart: '{{ postfix_inet_interfaces_precheck.changed }}'
+    __postfix_needs_restart: '{{ __postfix_inet_interfaces_precheck.changed }}'
 
 - name: configure main.cf
   ansible.builtin.template:
@@ -38,23 +38,23 @@
     owner: root
     group: root
     mode: 0644
-  register: postfix_main_configuration
+  register: __postfix_main_configuration
 
 - name: reload postfix service
   ansible.builtin.service:
     name: postfix
     state: reloaded
   when: >
-    postfix_main_configuration.changed and
-    not postfix_needs_restart
+    __postfix_main_configuration.changed and
+    not __postfix_needs_restart
 
 - name: restart postfix service
   ansible.builtin.service:
     name: postfix
     state: restarted
   when: >
-    postfix_main_configuration.changed and
-    postfix_needs_restart
+    __postfix_main_configuration.changed and
+    __postfix_needs_restart
 
 - name: configure /etc/aliases
   ansible.builtin.template:
@@ -63,11 +63,11 @@
     owner: root
     group: root
     mode: 0644
-  register: postfix_aliases_configuration
+  register: __postfix_aliases_configuration
 
 - name: regenerate /etc/aliases.db
   ansible.builtin.command: newaliases
-  when: postfix_aliases_configuration.changed
+  when: __postfix_aliases_configuration.changed
 
 - name: header_checks
   when: postfix_header_checks is defined
@@ -81,7 +81,7 @@
         group: root
         mode: 0644
       when: item.content is defined
-      register: postfix_header_checks_configuration
+      register: __postfix_header_checks_configuration
       loop: '{{ postfix_header_checks }}'
 
     - name: regenerate header_checks files
@@ -94,7 +94,7 @@
         item.item.type == "hash" or
         item.item.type == "lmdb" or
         item.item.type == "sdbm")
-      loop: '{{ postfix_header_checks_configuration.results }}'
+      loop: '{{ __postfix_header_checks_configuration.results }}'
 
 - name: canonical_maps
   when: postfix_canonical is defined
@@ -108,7 +108,7 @@
         group: root
         mode: 0644
       when: item.content is defined
-      register: postfix_canonical_configuration
+      register: __postfix_canonical_configuration
       loop: '{{ postfix_canonical }}'
 
     - name: regenerate canonical_maps files
@@ -121,7 +121,7 @@
         item.item.type == "hash" or
         item.item.type == "lmdb" or
         item.item.type == "sdbm")
-      loop: '{{ postfix_canonical_configuration.results }}'
+      loop: '{{ __postfix_canonical_configuration.results }}'
 
 - name: recipient_canonical_maps
   when: postfix_recipient_canonical is defined
@@ -135,7 +135,7 @@
         group: root
         mode: 0644
       when: item.content is defined
-      register: postfix_recipient_canonical_configuration
+      register: __postfix_recipient_canonical_configuration
       loop: '{{ postfix_recipient_canonical }}'
 
     - name: regenerate recipient_canonical_maps files
@@ -148,7 +148,7 @@
         item.item.type == "hash" or
         item.item.type == "lmdb" or
         item.item.type == "sdbm")
-      loop: '{{ postfix_recipient_canonical_configuration.results }}'
+      loop: '{{ __postfix_recipient_canonical_configuration.results }}'
 
 - name: sender_canonical_maps
   when: postfix_sender_canonical is defined
@@ -162,7 +162,7 @@
         group: root
         mode: 0644
       when: item.content is defined
-      register: postfix_sender_canonical_configuration
+      register: __postfix_sender_canonical_configuration
       loop: '{{ postfix_sender_canonical }}'
 
     - name: regenerate sender_canonical_maps files
@@ -175,7 +175,7 @@
         item.item.type == "hash" or
         item.item.type == "lmdb" or
         item.item.type == "sdbm")
-      loop: '{{ postfix_sender_canonical_configuration.results }}'
+      loop: '{{ __postfix_sender_canonical_configuration.results }}'
 
 - name: smtp_generic_maps
   when: postfix_smtp_generic is defined
@@ -189,7 +189,7 @@
         group: root
         mode: 0644
       when: item.content is defined
-      register: postfix_smtp_generic_configuration
+      register: __postfix_smtp_generic_configuration
       loop: '{{ postfix_smtp_generic }}'
 
     - name: regenerate smtp_generic_maps files
@@ -202,7 +202,7 @@
         item.item.type == "hash" or
         item.item.type == "lmdb" or
         item.item.type == "sdbm")
-      loop: '{{ postfix_smtp_generic_configuration.results }}'
+      loop: '{{ __postfix_smtp_generic_configuration.results }}'
 
 - name: transport_maps
   when: postfix_transport is defined
@@ -216,7 +216,7 @@
         group: root
         mode: 0644
       when: item.content is defined
-      register: postfix_transport_configuration
+      register: __postfix_transport_configuration
       loop: '{{ postfix_transport }}'
 
     - name: regenerate transport_maps files
@@ -229,7 +229,7 @@
         item.item.type == "hash" or
         item.item.type == "lmdb" or
         item.item.type == "sdbm")
-      loop: '{{ postfix_transport_configuration.results }}'
+      loop: '{{ __postfix_transport_configuration.results }}'
 
 - name: enable postfix service and assure it is started
   ansible.builtin.service:

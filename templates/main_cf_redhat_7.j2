@@ -727,11 +727,11 @@ manpage_directory = /usr/share/man
 # sample_directory: The location of the Postfix sample configuration files.
 # This parameter is obsolete as of Postfix 2.1.
 #
-sample_directory = /usr/share/doc/postfix-{{ postfix_installed_version }}/samples
+sample_directory = /usr/share/doc/postfix-{{ __postfix_installed_version }}/samples
 
 # readme_directory: The location of the Postfix README files.
 #
-readme_directory = /usr/share/doc/postfix-{{ postfix_installed_version }}/README_FILES
+readme_directory = /usr/share/doc/postfix-{{ __postfix_installed_version }}/README_FILES
 {% if postfix_smtp is defined %}
 {% if postfix_smtp.tls_note_starttls_offer is defined %}
 smtp_tls_note_starttls_offer = {{ postfix_smtp.tls_note_starttls_offer }}
