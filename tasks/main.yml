@@ -67,6 +67,7 @@
 
 - name: regenerate /etc/aliases.db
   ansible.builtin.command: newaliases
+  changed_when: yes
   when: __postfix_aliases_configuration.changed
 
 - name: header_checks
@@ -86,6 +87,7 @@
 
     - name: regenerate header_checks files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
+      changed_when: yes
       when:
         - item.changed
         - >-
@@ -114,6 +116,7 @@
 
     - name: regenerate canonical_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
+      changed_when: yes
       when:
         - item.changed
         - >-
@@ -142,6 +145,7 @@
 
     - name: regenerate recipient_canonical_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
+      changed_when: yes
       when:
         - item.changed
         - >-
@@ -170,6 +174,7 @@
 
     - name: regenerate sender_canonical_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
+      changed_when: yes
       when:
         - item.changed
         - >-
@@ -198,6 +203,7 @@
 
     - name: regenerate smtp_generic_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
+      changed_when: yes
       when:
         - item.changed
         - >-
@@ -226,6 +232,7 @@
 
     - name: regenerate transport_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
+      changed_when: yes
       when:
         - item.changed
         - >-
