@@ -44,17 +44,17 @@
   ansible.builtin.service:
     name: postfix
     state: reloaded
-  when: >
-    __postfix_main_configuration.changed and
-    not __postfix_needs_restart
+  when:
+    - __postfix_main_configuration.changed
+    - not __postfix_needs_restart
 
 - name: restart postfix service
   ansible.builtin.service:
     name: postfix
     state: restarted
-  when: >
-    __postfix_main_configuration.changed and
-    __postfix_needs_restart
+  when:
+    - __postfix_main_configuration.changed
+    - __postfix_needs_restart
 
 - name: configure /etc/aliases
   ansible.builtin.template:
@@ -86,14 +86,15 @@
 
     - name: regenerate header_checks files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
-      when: >
-        item.changed and
-        (item.item.type == "btree" or
-        item.item.type == "cdb" or
-        item.item.type == "dbm" or
-        item.item.type == "hash" or
-        item.item.type == "lmdb" or
-        item.item.type == "sdbm")
+      when:
+        - item.changed
+        - >-
+          item.item.type == "btree" or
+          item.item.type == "cdb" or
+          item.item.type == "dbm" or
+          item.item.type == "hash" or
+          item.item.type == "lmdb" or
+          item.item.type == "sdbm"
       loop: '{{ __postfix_header_checks_configuration.results }}'
 
 - name: canonical_maps
@@ -113,14 +114,15 @@
 
     - name: regenerate canonical_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
-      when: >
-        item.changed and
-        (item.item.type == "btree" or
-        item.item.type == "cdb" or
-        item.item.type == "dbm" or
-        item.item.type == "hash" or
-        item.item.type == "lmdb" or
-        item.item.type == "sdbm")
+      when:
+        - item.changed
+        - >-
+          item.item.type == "btree" or
+          item.item.type == "cdb" or
+          item.item.type == "dbm" or
+          item.item.type == "hash" or
+          item.item.type == "lmdb" or
+          item.item.type == "sdbm"
       loop: '{{ __postfix_canonical_configuration.results }}'
 
 - name: recipient_canonical_maps
@@ -140,14 +142,15 @@
 
     - name: regenerate recipient_canonical_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
-      when: >
-        item.changed and
-        (item.item.type == "btree" or
-        item.item.type == "cdb" or
-        item.item.type == "dbm" or
-        item.item.type == "hash" or
-        item.item.type == "lmdb" or
-        item.item.type == "sdbm")
+      when:
+        - item.changed
+        - >-
+          item.item.type == "btree" or
+          item.item.type == "cdb" or
+          item.item.type == "dbm" or
+          item.item.type == "hash" or
+          item.item.type == "lmdb" or
+          item.item.type == "sdbm"
       loop: '{{ __postfix_recipient_canonical_configuration.results }}'
 
 - name: sender_canonical_maps
@@ -167,14 +170,15 @@
 
     - name: regenerate sender_canonical_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
-      when: >
-        item.changed and
-        (item.item.type == "btree" or
-        item.item.type == "cdb" or
-        item.item.type == "dbm" or
-        item.item.type == "hash" or
-        item.item.type == "lmdb" or
-        item.item.type == "sdbm")
+      when:
+        - item.changed
+        - >-
+          item.item.type == "btree" or
+          item.item.type == "cdb" or
+          item.item.type == "dbm" or
+          item.item.type == "hash" or
+          item.item.type == "lmdb" or
+          item.item.type == "sdbm"
       loop: '{{ __postfix_sender_canonical_configuration.results }}'
 
 - name: smtp_generic_maps
@@ -194,14 +198,15 @@
 
     - name: regenerate smtp_generic_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
-      when: >
-        item.changed and
-        (item.item.type == "btree" or
-        item.item.type == "cdb" or
-        item.item.type == "dbm" or
-        item.item.type == "hash" or
-        item.item.type == "lmdb" or
-        item.item.type == "sdbm")
+      when:
+        - item.changed
+        - >-
+          item.item.type == "btree" or
+          item.item.type == "cdb" or
+          item.item.type == "dbm" or
+          item.item.type == "hash" or
+          item.item.type == "lmdb" or
+          item.item.type == "sdbm"
       loop: '{{ __postfix_smtp_generic_configuration.results }}'
 
 - name: transport_maps
@@ -221,14 +226,15 @@
 
     - name: regenerate transport_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
-      when: >
-        item.changed and
-        (item.item.type == "btree" or
-        item.item.type == "cdb" or
-        item.item.type == "dbm" or
-        item.item.type == "hash" or
-        item.item.type == "lmdb" or
-        item.item.type == "sdbm")
+      when:
+        - item.changed
+        - >-
+          item.item.type == "btree" or
+          item.item.type == "cdb" or
+          item.item.type == "dbm" or
+          item.item.type == "hash" or
+          item.item.type == "lmdb" or
+          item.item.type == "sdbm"
       loop: '{{ __postfix_transport_configuration.results }}'
 
 - name: enable postfix service and assure it is started
