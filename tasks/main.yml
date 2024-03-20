@@ -65,7 +65,7 @@
     mode: 0644
   register: __postfix_aliases_configuration
 
-- name: regenerate /etc/aliases.db
+- name: regenerate /etc/aliases.db # noqa no-handler
   ansible.builtin.command: newaliases
   changed_when: yes
   when: __postfix_aliases_configuration.changed
