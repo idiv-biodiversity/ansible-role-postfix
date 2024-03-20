@@ -31,7 +31,7 @@ Table of Contents
 Requirements
 ------------
 
-- Ansible 2+
+- Ansible 2.9
 
 Role Variables
 --------------
@@ -261,26 +261,22 @@ postfix_local_header_rewrite_clients:
 Dependencies
 ------------
 
-None.
-
-Example Playbook
-----------------
-
-Add to `requirements.yml`:
-
 ```yml
 ---
 
-- src: idiv-biodiversity.postfix
+# requirements.yml
+
+roles:
+
+  - name: idiv_biodiversity.postfix
+    src: https://github.com/idiv-biodiversity/ansible-role-postfix
+    version: vX.Y.Z
 
 ...
 ```
 
-Download:
-
-```console
-$ ansible-galaxy install -r requirements.yml
-```
+Example Playbook
+----------------
 
 ### Top-Level Playbook
 
@@ -293,7 +289,7 @@ Write a top-level playbook:
   hosts: head
 
   roles:
-    - role: idiv-biodiversity.postfix
+    - role: idiv_biodiversity.postfix
       tags:
         - mail
         - mta
@@ -311,7 +307,7 @@ Define the role dependency in `meta/main.yml`:
 
 dependencies:
 
-  - role: idiv-biodiversity.postfix
+  - role: idiv_biodiversity.postfix
     tags:
       - mail
       - mta
