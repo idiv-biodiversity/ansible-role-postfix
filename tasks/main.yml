@@ -1,21 +1,20 @@
 ---
 
 - name: install postfix
-  ansible.builtin.yum:
+  ansible.builtin.package:
     name: postfix
 
 - name: get installed version
-  ansible.builtin.yum:
-    list: postfix
-  register: __postfix_installed_version_getter
+  ansible.builtin.package_facts:
+    manager: auto
 
 - name: set installed version fact
   ansible.builtin.set_fact:
     __postfix_installed_version: >-
-      {{ __postfix_installed_version_getter.results.0.version }}
+      {{ ansible_facts.packages['postfix'].0.version }}
 
 - name: remove sendmail
-  ansible.builtin.yum:
+  ansible.builtin.package:
     name: sendmail
     state: absent
 
