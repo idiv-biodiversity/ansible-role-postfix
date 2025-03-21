@@ -1,0 +1,52 @@
+---
+
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ../default/converge.yml
+    verify: ../default/verify.yml
+  inventory:
+    group_vars:
+      all:
+        postfix_aliases:
+          - user: root
+            alias: admin@example.org
+        postfix_canonical:
+          - type: hash
+            dest: /etc/postfix/canonical
+            content: |
+              platform@internal.domain platform@example.org
+        postfix_recipient_canonical:
+          - type: hash
+            dest: /etc/postfix/recipient_canonical
+            content: |
+              root@internal.domain   admin@example.org
+              icinga@internal.domain admin@example.org
+        postfix_sender_canonical:
+          - type: hash
+            dest: /etc/postfix/sender_canonical
+            content: |
+              root@internal.domain   support@example.org
+              icinga@internal.domain support@example.org
+        postfix_header_checks:
+          - type: regexp
+            dest: /etc/postfix/header_checks
+            content: >
+              /^From: root@[^ ]+\.example.org .*/
+              REPLACE From: no-reply@example.org
+        postfix_smtp_generic:
+          - type: hash
+            dest: /etc/postfix/smtp_generic
+            content: |
+              icinga@internal support@example.org
+              @internal       no-reply@example.org
+        postfix_transport:
+          - type: hash
+            dest: /etc/postfix/transport
+            content: |
+              foo.org         smtp:[imap1.example.org]
+              .foo.org        smtp:[imap1.example.org]
+              bar.org         smtp:[imap2.example.org]
+              .bar.org        smtp:[imap2.example.org]
+
+...

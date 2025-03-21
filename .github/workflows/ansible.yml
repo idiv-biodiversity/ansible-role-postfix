@@ -17,4 +17,41 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ansible/ansible-lint@v25
 
+  molecule:
+    needs:
+      - ansible-lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        distro:
+          - name: rockylinux-8
+            ansible: 2.16 # latest to support target python 3.6
+          - name: rockylinux-9
+            ansible: 2.18
+        scenario:
+          - default
+          - alternative
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: >-
+          pip3 install
+          ansible-core~=${{ matrix.distro.ansible }}.0
+          docker
+          molecule
+          molecule-plugins[docker]
+      - run: ansible --version
+      - run: molecule --version
+      - run: >-
+          molecule test
+          -p ${{ matrix.distro.name }}
+          -s ${{ matrix.scenario }}
+        env:
+          ANSIBLE_DIFF_ALWAYS: 'True'
+          PY_COLORS: '1'
+
 ...

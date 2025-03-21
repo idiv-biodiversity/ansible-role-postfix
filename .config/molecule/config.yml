@@ -1,0 +1,43 @@
+---
+
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+
+  - name: rockylinux-8
+    image: ghcr.io/idiv-biodiversity/ansible-molecule-rockylinux-8:latest
+    command: /usr/lib/systemd/systemd
+    pre_build_image: yes
+    privileged: yes
+    cgroupns_mode: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    groups:
+      - nosudo
+
+  - name: rockylinux-9
+    image: ghcr.io/idiv-biodiversity/ansible-molecule-rockylinux-9:latest
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    pre_build_image: yes
+    privileged: yes
+    cgroupns_mode: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    groups:
+      - nosudo
+
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      nosudo:
+        ansible_become_method: su
+
+verifier:
+  name: ansible
+
+...
