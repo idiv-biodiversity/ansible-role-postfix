@@ -1,0 +1,196 @@
+---
+
+argument_specs:
+  main:
+    options:
+
+      postfix_aliases:
+        type: list
+        elements: dict
+        options:
+          user:
+            required: yes
+            type: str
+          alias:
+            required: yes
+            type: str
+
+      postfix_canonical:
+        type: list
+        elements: dict
+        options:
+          type:
+            required: yes
+            type: str
+          dest:
+            required: yes
+            type: str
+          content:
+            required: yes
+            type: str
+
+      postfix_compatibility_level:
+        required: yes
+        type: str
+
+      postfix_destinations:
+        required: yes
+        type: list
+        elements: str
+
+      postfix_domain:
+        type: str
+
+      postfix_header_checks:
+        type: list
+        elements: dict
+        options:
+          type:
+            required: yes
+            type: str
+          dest:
+            required: yes
+            type: str
+          content:
+            required: yes
+            type: str
+
+      postfix_hostname:
+        type: str
+
+      postfix_inet_interfaces:
+        required: yes
+        type: list
+        elements: str
+
+      postfix_inet_protocols:
+        type: str
+
+      postfix_local_header_rewrite_clients:
+        type: list
+        elements: dict
+        options:
+          type:
+            required: yes
+            type: str
+          dest:
+            required: yes
+            type: str
+
+      postfix_masquerade_classes:
+        type: list
+        elements: str
+
+      postfix_masquerade_domains:
+        type: list
+        elements: str
+
+      postfix_masquerade_exceptions:
+        type: list
+        elements: str
+
+      postfix_origin:
+        type: str
+
+      postfix_recipient_canonical:
+        type: list
+        elements: dict
+        options:
+          type:
+            required: yes
+            type: str
+          dest:
+            required: yes
+            type: str
+          content:
+            required: yes
+            type: str
+
+      postfix_relayhost:
+        type: str
+
+      postfix_sender_canonical:
+        type: list
+        elements: dict
+        options:
+          type:
+            required: yes
+            type: str
+          dest:
+            required: yes
+            type: str
+          content:
+            required: yes
+            type: str
+
+      postfix_smtp:
+        type: dict
+        options:
+          tls_CAfile:
+            type: str
+          tls_CApath:
+            type: str
+          tls_cert_file:
+            type: str
+          tls_key_file:
+            type: str
+          tls_note_starttls_offer:
+            type: str
+          tls_security_level:
+            type: str
+
+      postfix_smtp_fallback_relay:
+        type: str
+
+      postfix_smtp_generic:
+        type: list
+        elements: dict
+        options:
+          type:
+            required: yes
+            type: str
+          dest:
+            required: yes
+            type: str
+          content:
+            required: yes
+            type: str
+
+      postfix_smtpd:
+        type: dict
+        options:
+          tls_CApath:
+            type: str
+          tls_auth_only:
+            type: str
+          tls_cert_file:
+            type: str
+          tls_key_file:
+            type: str
+          tls_loglevel:
+            type: str
+          tls_received_header:
+            type: str
+          tls_security_level:
+            type: str
+          tls_session_cache_timeout:
+            type: str
+
+      postfix_tls_random_source:
+        type: str
+
+      postfix_transport:
+        type: list
+        elements: dict
+        options:
+          type:
+            required: yes
+            type: str
+          dest:
+            required: yes
+            type: str
+          content:
+            required: yes
+            type: str
+
+...

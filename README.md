@@ -192,11 +192,11 @@ everything else **@internal** to **no-reply@example.org**:
 
 ```yml
 postfix_smtp_generic:
-  type: hash
-  dest: /etc/postfix/smtp_generic
-  content: |
-    icinga@internal support@example.org
-    @internal       no-reply@example.org
+  - type: hash
+    dest: /etc/postfix/smtp_generic
+    content: |
+      icinga@internal support@example.org
+      @internal       no-reply@example.org
 ```
 
 **Note:** Affects both message header addresses, i.e. the **From:** field, and
