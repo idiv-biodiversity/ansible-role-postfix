@@ -36,7 +36,7 @@
     dest: /etc/postfix/main.cf
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   register: __postfix_main_configuration
 
 - name: reload postfix service
@@ -61,7 +61,7 @@
     dest: /etc/aliases
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   register: __postfix_aliases_configuration
 
 - name: regenerate /etc/aliases.db # noqa no-handler
@@ -79,7 +79,7 @@
         dest: '{{ item.dest }}'
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
       when: item.content is defined
       register: __postfix_header_checks_configuration
       loop: '{{ postfix_header_checks }}'
@@ -108,7 +108,7 @@
         dest: '{{ item.dest }}'
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
       when: item.content is defined
       register: __postfix_canonical_configuration
       loop: '{{ postfix_canonical }}'
@@ -137,7 +137,7 @@
         dest: '{{ item.dest }}'
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
       when: item.content is defined
       register: __postfix_recipient_canonical_configuration
       loop: '{{ postfix_recipient_canonical }}'
@@ -166,7 +166,7 @@
         dest: '{{ item.dest }}'
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
       when: item.content is defined
       register: __postfix_sender_canonical_configuration
       loop: '{{ postfix_sender_canonical }}'
@@ -195,7 +195,7 @@
         dest: '{{ item.dest }}'
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
       when: item.content is defined
       register: __postfix_smtp_generic_configuration
       loop: '{{ postfix_smtp_generic }}'
@@ -224,7 +224,7 @@
         dest: '{{ item.dest }}'
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
       when: item.content is defined
       register: __postfix_transport_configuration
       loop: '{{ postfix_transport }}'

@@ -4,13 +4,12 @@ yaml-files:
   - '*.yaml'
   - '*.yml'
   - '.yamllint'
-  - '.ansible-lint'
 
 extends: default
 
 rules:
   braces:
-    min-spaces-inside: 1
+    min-spaces-inside: 0
     max-spaces-inside: 1
   brackets:
     max-spaces-inside: 1
@@ -22,6 +21,7 @@ rules:
   comments:
     require-starting-space: yes
     min-spaces-from-content: 1
+  comments-indentation: no
   document-start:
     present: yes
   document-end:
@@ -31,10 +31,16 @@ rules:
   key-duplicates: enable
   line-length:
     max: 79
+    allow-non-breakable-words: yes
   new-lines:
     type: unix
+  octal-values:
+    forbid-implicit-octal: yes
+    forbid-explicit-octal: yes
   truthy:
     allowed-values: ['yes', 'no']
     check-keys: no
+    ignore: >-
+      .github/workflows
 
 ...
