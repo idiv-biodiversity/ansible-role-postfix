@@ -4,15 +4,6 @@
   ansible.builtin.package:
     name: postfix
 
-- name: get installed version
-  ansible.builtin.package_facts:
-    manager: auto
-
-- name: set installed version fact
-  ansible.builtin.set_fact:
-    __postfix_installed_version: >-
-      {{ ansible_facts.packages['postfix'].0.version }}
-
 - name: remove sendmail
   ansible.builtin.package:
     name: sendmail
