@@ -84,6 +84,8 @@
         - item.content is defined
       register: __postfix_header_checks_configuration
       loop: '{{ postfix_header_checks }}'
+      loop_control:
+        label: '{{ item.dest }}'
 
     - name: regenerate header_checks files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
@@ -98,6 +100,8 @@
           item.item.type == "lmdb" or
           item.item.type == "sdbm"
       loop: '{{ __postfix_header_checks_configuration.results }}'
+      loop_control:
+        label: '{{ item.item.dest }}'
 
 - name: canonical_maps
   when:
@@ -115,6 +119,8 @@
         - item.content is defined
       register: __postfix_canonical_configuration
       loop: '{{ postfix_canonical }}'
+      loop_control:
+        label: '{{ item.dest }}'
 
     - name: regenerate canonical_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
@@ -129,6 +135,8 @@
           item.item.type == "lmdb" or
           item.item.type == "sdbm"
       loop: '{{ __postfix_canonical_configuration.results }}'
+      loop_control:
+        label: '{{ item.item.dest }}'
 
 - name: recipient_canonical_maps
   when:
@@ -146,6 +154,8 @@
         - item.content is defined
       register: __postfix_recipient_canonical_configuration
       loop: '{{ postfix_recipient_canonical }}'
+      loop_control:
+        label: '{{ item.dest }}'
 
     - name: regenerate recipient_canonical_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
@@ -160,6 +170,8 @@
           item.item.type == "lmdb" or
           item.item.type == "sdbm"
       loop: '{{ __postfix_recipient_canonical_configuration.results }}'
+      loop_control:
+        label: '{{ item.item.dest }}'
 
 - name: sender_canonical_maps
   when:
@@ -177,6 +189,8 @@
         - item.content is defined
       register: __postfix_sender_canonical_configuration
       loop: '{{ postfix_sender_canonical }}'
+      loop_control:
+        label: '{{ item.dest }}'
 
     - name: regenerate sender_canonical_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
@@ -191,6 +205,8 @@
           item.item.type == "lmdb" or
           item.item.type == "sdbm"
       loop: '{{ __postfix_sender_canonical_configuration.results }}'
+      loop_control:
+        label: '{{ item.item.dest }}'
 
 - name: smtp_generic_maps
   when:
@@ -208,6 +224,8 @@
         - item.content is defined
       register: __postfix_smtp_generic_configuration
       loop: '{{ postfix_smtp_generic }}'
+      loop_control:
+        label: '{{ item.dest }}'
 
     - name: regenerate smtp_generic_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
@@ -222,6 +240,8 @@
           item.item.type == "lmdb" or
           item.item.type == "sdbm"
       loop: '{{ __postfix_smtp_generic_configuration.results }}'
+      loop_control:
+        label: '{{ item.item.dest }}'
 
 - name: transport_maps
   when:
@@ -239,6 +259,8 @@
         - item.content is defined
       register: __postfix_transport_configuration
       loop: '{{ postfix_transport }}'
+      loop_control:
+        label: '{{ item.dest }}'
 
     - name: regenerate transport_maps files
       ansible.builtin.command: 'postmap {{ item.item.dest }}'
@@ -253,6 +275,8 @@
           item.item.type == "lmdb" or
           item.item.type == "sdbm"
       loop: '{{ __postfix_transport_configuration.results }}'
+      loop_control:
+        label: '{{ item.item.dest }}'
 
 - name: enable postfix service and assure it is started
   ansible.builtin.service:
