@@ -2,7 +2,9 @@
 
 - name: install postfix
   ansible.builtin.package:
-    name: postfix
+    name:
+      - postfix
+      - setup # default /etc/aliases
 
 - name: remove sendmail
   ansible.builtin.package:
