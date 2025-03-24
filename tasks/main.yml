@@ -60,10 +60,12 @@
 - name: regenerate /etc/aliases.db # noqa no-handler
   ansible.builtin.command: newaliases
   changed_when: yes
-  when: __postfix_aliases_configuration.changed
+  when:
+    - __postfix_aliases_configuration.changed
 
 - name: header_checks
-  when: postfix_header_checks is defined
+  when:
+    - postfix_header_checks is defined
   block:
 
     - name: configure header_checks files
@@ -73,7 +75,8 @@
         owner: root
         group: root
         mode: '0644'
-      when: item.content is defined
+      when:
+        - item.content is defined
       register: __postfix_header_checks_configuration
       loop: '{{ postfix_header_checks }}'
 
@@ -92,7 +95,8 @@
       loop: '{{ __postfix_header_checks_configuration.results }}'
 
 - name: canonical_maps
-  when: postfix_canonical is defined
+  when:
+    - postfix_canonical is defined
   block:
 
     - name: configure canonical_maps files
@@ -102,7 +106,8 @@
         owner: root
         group: root
         mode: '0644'
-      when: item.content is defined
+      when:
+        - item.content is defined
       register: __postfix_canonical_configuration
       loop: '{{ postfix_canonical }}'
 
@@ -121,7 +126,8 @@
       loop: '{{ __postfix_canonical_configuration.results }}'
 
 - name: recipient_canonical_maps
-  when: postfix_recipient_canonical is defined
+  when:
+    - postfix_recipient_canonical is defined
   block:
 
     - name: configure recipient_canonical_maps files
@@ -131,7 +137,8 @@
         owner: root
         group: root
         mode: '0644'
-      when: item.content is defined
+      when:
+        - item.content is defined
       register: __postfix_recipient_canonical_configuration
       loop: '{{ postfix_recipient_canonical }}'
 
@@ -150,7 +157,8 @@
       loop: '{{ __postfix_recipient_canonical_configuration.results }}'
 
 - name: sender_canonical_maps
-  when: postfix_sender_canonical is defined
+  when:
+    - postfix_sender_canonical is defined
   block:
 
     - name: configure sender_canonical_maps files
@@ -160,7 +168,8 @@
         owner: root
         group: root
         mode: '0644'
-      when: item.content is defined
+      when:
+        - item.content is defined
       register: __postfix_sender_canonical_configuration
       loop: '{{ postfix_sender_canonical }}'
 
@@ -179,7 +188,8 @@
       loop: '{{ __postfix_sender_canonical_configuration.results }}'
 
 - name: smtp_generic_maps
-  when: postfix_smtp_generic is defined
+  when:
+    - postfix_smtp_generic is defined
   block:
 
     - name: configure smtp_generic_maps files
@@ -189,7 +199,8 @@
         owner: root
         group: root
         mode: '0644'
-      when: item.content is defined
+      when:
+        - item.content is defined
       register: __postfix_smtp_generic_configuration
       loop: '{{ postfix_smtp_generic }}'
 
@@ -208,7 +219,8 @@
       loop: '{{ __postfix_smtp_generic_configuration.results }}'
 
 - name: transport_maps
-  when: postfix_transport is defined
+  when:
+    - postfix_transport is defined
   block:
 
     - name: configure transport_maps files
@@ -218,7 +230,8 @@
         owner: root
         group: root
         mode: '0644'
-      when: item.content is defined
+      when:
+        - item.content is defined
       register: __postfix_transport_configuration
       loop: '{{ postfix_transport }}'
 
