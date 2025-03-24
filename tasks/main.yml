@@ -48,20 +48,25 @@
     - __postfix_main_configuration.changed
     - __postfix_needs_restart
 
-- name: configure /etc/aliases
-  ansible.builtin.template:
-    src: '{{ lookup("first_found", __postfix_aliases_templates) }}'
-    dest: /etc/aliases
-    owner: root
-    group: root
-    mode: '0644'
-  register: __postfix_aliases_configuration
-
-- name: regenerate /etc/aliases.db # noqa no-handler
-  ansible.builtin.command: newaliases
-  changed_when: yes
+- name: aliases
   when:
-    - __postfix_aliases_configuration.changed
+    - postfix_aliases is defined
+  block:
+
+    - name: configure /etc/aliases
+      ansible.builtin.template:
+        src: '{{ lookup("first_found", __postfix_aliases_templates) }}'
+        dest: /etc/aliases
+        owner: root
+        group: root
+        mode: '0644'
+      register: __postfix_aliases_configuration
+
+    - name: regenerate /etc/aliases.db # noqa no-handler
+      ansible.builtin.command: newaliases
+      changed_when: yes
+      when:
+        - __postfix_aliases_configuration.changed
 
 - name: header_checks
   when:
