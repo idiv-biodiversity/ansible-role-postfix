@@ -18,7 +18,7 @@ jobs:
   ansible-lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ansible/ansible-lint@v25
 
   molecule:
@@ -41,7 +41,7 @@ jobs:
           - alternative
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.distro.python }}
