@@ -5,16 +5,16 @@
 # -----------------------------------------------------------------------------
 
 __postfix_distro: >-
-  {{ ansible_distribution | lower }}
+  {{ ansible_facts.distribution | lower }}
 
 __postfix_os: >-
-  {{ ansible_os_family | lower }}
+  {{ ansible_facts.os_family | lower }}
 
 __postfix_distro_version: >-
-  {{ __postfix_distro }}_{{ ansible_distribution_major_version }}
+  {{ __postfix_distro }}_{{ ansible_facts.distribution_major_version }}
 
 __postfix_os_version: >-
-  {{ __postfix_os }}_{{ ansible_distribution_major_version }}
+  {{ __postfix_os }}_{{ ansible_facts.distribution_major_version }}
 
 # -----------------------------------------------------------------------------
 # first found snippets
